@@ -4,9 +4,17 @@ else
   export PS1='%3~$(git_info_for_prompt)%# '
 fi
 
+export CLICOLOR=1
 export EDITOR='mate -w'
-export PATH="~/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/git/bin:$PATH"
-export MANPATH="/usr/local/man:/usr/local/mysql/man:/usr/local/git/man:$MANPATH"
+export GREP_OPTIONS='--color=auto'
+export MAVEN_OPTS='-Xmx512m -XX:MaxPermSize=128m'
+export P4CONFIG='.p4rc'
+
+## Load colors 
+autoload colors zsh/terminfo 
+if [[ "$terminfo[colors]" -ge 8 ]]; then 
+    colors 
+fi
 
 fpath=(~/.zsh/functions $fpath)
 
