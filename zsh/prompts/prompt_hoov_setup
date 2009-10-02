@@ -1,0 +1,50 @@
+# hoov prompt theme
+
+prompt_hoov_help () {
+  cat <<'EOF'
+
+  prompt hoov [<promptcolor> [<usercolor> [<rootcolor>]]]
+
+  defaults are blue, green, and red, respectively.
+
+EOF
+}
+
+prompt_hoov_setup () {
+  prompt_hoov_prompt=${1:-'blue'}
+  prompt_hoov_user=${2:-'green'}
+  prompt_hoov_root=${3:-'red'}
+  
+  if [ "$USER" = 'root' ]
+  then
+    base_prompt="%F{$prompt_hoov_root}%m%k "
+  else
+    base_prompt="%F{$prompt_hoov_user}%n@%m%k "
+  fi
+  post_prompt="%b%f%k"
+  
+  path_prompt="%F{$prompt_hoov_prompt}%1~"
+  PS1="$base_prompt$path_prompt %# $post_prompt"
+  PS2="$base_prompt$path_prompt %_> $post_prompt"
+  PS3="$base_prompt$path_prompt ?# $post_prompt"
+  
+  autoload -Uz vcs_info
+  #add-zsh-hook precmd prompt_hoov_precmd
+}
+
+prompt_hoov_precmd () {
+  setopt noxtrace noksharrays localoptions
+  local exitstatus=$?
+  local git_dir git_ref
+    
+  psvar=()
+  [[ $exitstatus -ge 128 ]] && psvar[1]=" $signals[$exitstatus-127]" ||
+    psvar[1]=""
+        
+  [[ -o interactive ]] && jobs -l
+    
+  vcs_info
+  [[ -n $vcs_info_msg_0_ ]] && psvar[2]="$vcs_info_msg_0_"
+}
+
+prompt_hoov_setup "$@"
