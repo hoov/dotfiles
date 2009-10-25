@@ -1,0 +1,60 @@
+## vim:ft=zsh
+## Written by Frank Terbeck <ft@bewatermyfriend.org>
+## Distributed under the same BSD-ish license as zsh itself.
+
+setopt localoptions noksharrays NO_shwordsplit
+local action=$1 branch=$2 base=$3 staged=$4 unstaged=$5 rev=$6 misc=$7
+
+## description:
+#   action:   a string that signals a certain non-default condition in the
+#             repository (like 'rebase-i' in git). If this in non-empty,
+#             the actionformats will be used, too.
+#   branch:   the name of the currently checked out branch.
+#   base:     the full name of the repository's root directory.
+#   staged:   non-empty if the repository contains staged changes.
+#   unstaged: non-empty if the repository contains unstaged changes.
+#   rev:      an identifier of the currently checked out revision.
+#   misc:     a string that may contain anything the author likes.
+#             the backends should document what they put in it and when.
+#
+# If an argument has no valid value for a given backend, an empty value
+# should be provided. eg:
+#   VCS_INFO_formats '' "${foobranch}" "${foobase}" '' '' '' "${foomisc}"
+
+local msg
+local -i i j
+
+if [[ -n ${action} ]] ; then
+    zstyle -a ":vcs_info:${vcs}:${usercontext}:${rrn}" actionformats msgs
+    (( ${#msgs} < 1 )) && msgs[1]=' (%s)-[%b|%a]-'
+else
+    zstyle -a ":vcs_info:${vcs}:${usercontext}:${rrn}" formats msgs
+    (( ${#msgs} < 1 )) && msgs[1]=' (%s)-[%b]-'
+fi
+
+if [[ -n ${staged} ]] ; then
+    zstyle -s ":vcs_info:${vcs}:${usercontext}:${rrn}" stagedstr staged
+    [[ -z ${staged} ]] && staged='S'
+fi
+
+if [[ -n ${unstaged} ]] ; then
+    zstyle -s ":vcs_info:${vcs}:${usercontext}:${rrn}" unstagedstr unstaged
+    [[ -z ${unstaged} ]] && unstaged='U'
+fi
+
+(( ${#msgs} > maxexports )) && msgs[$(( maxexports + 1 )),-1]=()
+for i in {1..${#msgs}} ; do
+    zformat -f msg ${msgs[$i]}                      \
+                    a:${action}                     \
+                    b:${branch}                     \
+                    c:${staged}                     \
+                    i:${rev}                        \
+                    m:${misc}                       \
+                    r:${base:t}                     \
+                    s:${vcs}                        \
+                    u:${unstaged}                   \
+                    R:${base}                       \
+                    S:"$(VCS_INFO_reposub ${base})"
+    msgs[$i]=${msg}
+done
+return 0
