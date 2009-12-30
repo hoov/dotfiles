@@ -13,6 +13,7 @@ alias po=popd
 alias d='dirs -v'
 alias h=history
 alias grep=egrep
+alias wget='curl -O'
 
 # ls
 if [[ $UNAME == "Linux" ]]; then
