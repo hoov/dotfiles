@@ -9,6 +9,10 @@ export EDITOR='mate -w'
 export GREP_OPTIONS='--color=auto'
 export MAVEN_OPTS='-Xmx512m -XX:MaxPermSize=128m'
 export P4CONFIG='.p4rc'
+# Mac OS
+export LSCOLORS='exfxcxdxbxegedabagacad'
+# Ubuntu
+export LS_COLORS='exfxcxdxbxegedabagacad'
 
 ## Load colors 
 autoload colors zsh/terminfo 
