@@ -1,0 +1,8 @@
+[ui]
+username = Tom Hoover <tom@dropbox.com>
+ignore = ~/.hgignore
+
+[extensions]
+color =
+hgext.fetch=
+
