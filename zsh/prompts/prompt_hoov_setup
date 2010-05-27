@@ -35,10 +35,14 @@ prompt_hoov_setup () {
   # check-for-changes can be really slow.
   # you should disable it, if you work with large repositories    
   zstyle ':vcs_info:*' check-for-changes true
+  zstyle ':vcs_info:*' get-revision true
   zstyle ':vcs_info:*' unstagedstr '¹'  # display ¹ if there are unstaged changes
   zstyle ':vcs_info:*' stagedstr '²'    # display ² if there are staged changes
   zstyle ':vcs_info:*' actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
   zstyle ':vcs_info:*' formats       '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%u%c%F{5}]%f '
+
+  # Mercurial fun
+  zstyle ':vcs_info:hg:*' hgrevformat '%r'
 }
 
 prompt_hoov_precmd () {
