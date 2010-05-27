@@ -30,6 +30,7 @@ fi
 
 fpath=(~/.zsh/functions $fpath)
 fpath=(~/.zsh/functions/vcs_info $fpath)
+fpath=(~/.zsh/functions/vcs_info/Backends $fpath)
 
 autoload -U ~/.zsh/functions/*(:t)
 autoload -U ~/.zsh/functions/vcs_info*(:t)
