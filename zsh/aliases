@@ -13,7 +13,11 @@ alias po=popd
 alias d='dirs -v'
 alias h=history
 alias grep=egrep
-alias wget='curl -O'
+
+# Prefer real wget to curl
+if [[ (! -x $(which wget) ) && ( -x $(which curl) ) ]]; then
+  alias wget='curl -O'
+fi
 
 # ls
 if [[ $UNAME == "Linux" ]]; then
