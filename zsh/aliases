@@ -34,6 +34,18 @@ alias lsd='ls -ld *(-/DN)'
 # List only file beginning with "."
 alias lsa='ls -ld .*'
 
+if [[ $UNAME == "Darwin" ]]; then
+  function pidcp () {
+    if (($# == 0))
+    then
+      echo usage: pidcp process_name
+    else
+      ps ax | grep $1 | grep -v grep | awk '{print $1}' | pbcopy
+      echo "Copied `pbpaste` to the clipboard"
+    fi
+  }
+fi
+
 # git
 alias gl='git pull'
 alias gp='git push'
