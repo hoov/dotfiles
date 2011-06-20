@@ -27,6 +27,17 @@ if [ -e "/usr/local/CrossPack-AVR" ]; then
   export PATH
 fi
 
+if [ -e "$HOME/.rvm/bin" ]; then
+  PATH="$PATH:$HOME/.rvm/bin"
+  export PATH
+fi
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+
+if [ -e "$HOME/bin" ]; then
+  PATH="$PATH:$HOME/bin"
+  export PATH
+fi
 
 fpath=(~/.zsh/functions $fpath)
 fpath=(~/.zsh/functions/vcs_info $fpath)
