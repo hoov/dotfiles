@@ -39,6 +39,11 @@ if [ -e "$HOME/bin" ]; then
   export PATH
 fi
 
+if [ -e "/usr/local/bin" ]; then
+  PATH="/usr/local/bin:$PATH"
+  export PATH
+fi
+
 fpath=(~/.zsh/functions $fpath)
 fpath=(~/.zsh/functions/vcs_info $fpath)
 fpath=(~/.zsh/functions/vcs_info/Backends $fpath)
