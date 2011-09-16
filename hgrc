@@ -1,5 +1,5 @@
 [ui]
-username = Tom Hoover <tom@dropbox.com>
+username = Tom Hoover <thoover@alum.mit.edu>
 ignore = ~/.hgignore
 
 [extensions]
