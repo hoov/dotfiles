@@ -10,6 +10,13 @@ prompt_hoov_help () {
 EOF
 }
 
+function rvm_info_for_prompt {
+  ruby_version=$(~/.rvm/bin/rvm-prompt)
+  if [ -n "$ruby_version" ]; then
+    echo "[$ruby_version]"
+  fi
+}
+
 prompt_hoov_setup () {
   prompt_hoov_prompt=${1:-'blue'}
   prompt_hoov_user=${2:-'green'}
@@ -17,7 +24,7 @@ prompt_hoov_setup () {
   
   if [ "$USER" = 'root' ]
   then
-    base_prompt="%F{$prompt_hoov_root}%m%k%f "
+    base_prompt=" %F{$prompt_hoov_root}%m%k%f "
   else
     base_prompt="%F{$prompt_hoov_user}%n@%m%k%f "
   fi

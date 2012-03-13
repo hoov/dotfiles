@@ -19,6 +19,10 @@ if [[ (! -x $(which wget) ) && ( -x $(which curl) ) ]]; then
   alias wget='curl -O'
 fi
 
+if [[ -x $(which mvim) ]]; then
+  alias vim='mvim -v'
+fi
+
 # ls
 if [[ $UNAME == "Linux" ]]; then
   alias ls='ls --color=auto'
@@ -26,6 +30,7 @@ fi
 
 alias ll='ls -l'
 alias la='ls -A'
+alias lla='ls -lA'
 
 # List only directories and symbolic
 # links that point to directories
@@ -69,3 +74,5 @@ alias rst='touch tmp/restart.txt'
 
 # commands starting with % for pasting from web
 alias %=' '
+
+alias ccat=pygmentize
