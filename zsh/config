@@ -54,6 +54,13 @@ if [ -e "/usr/local/bin" ]; then
   export PATH
 fi
 
+if [ -e "$HOME/.bin" ]; then
+  PATH="$HOME/.bin:$PATH"
+  export PATH
+fi
+
+[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
+
 fpath=(~/.zsh/functions $fpath)
 fpath=(~/.zsh/functions/vcs_info $fpath)
 fpath=(~/.zsh/functions/vcs_info/Backends $fpath)

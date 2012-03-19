@@ -1,0 +1,16 @@
+# ~/.tmuxinator/dexi.yml
+# you can make as many tabs as you wish...
+
+project_name: dexi
+project_root: ~/src/thoover-centos-dexi/convert
+pre: sudo /etc/init.d/zookeeper start
+tabs:
+  - editor:
+      layout: main-horizontal
+      panes:
+        - source dexi-convert-env/bin/activate && vim
+        - source dexi-convert-env/bin/activate
+  - frontend: source dexi-convert-env/bin/activate && run_frontend
+  - worker: source dexi-convert-env/bin/activate && run_worker noop
+  - admin: source dexi-convert-env/bin/activate && run_admin
+  - nose: source dexi-convert-env/bin/activate && redgreen -- --with-yanc
