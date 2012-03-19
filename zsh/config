@@ -5,7 +5,7 @@
 #fi
 
 export CLICOLOR=1
-export EDITOR='mvim -f'
+export EDITOR='mvim -f --nomru -c "au VimLeave * !open -a Terminal"'
 export GREP_OPTIONS='--color=auto'
 export MAVEN_OPTS='-Xmx512m -XX:MaxPermSize=128m'
 export ANT_OPTS='-Xmx1024m -XX:MaxPermSize=128m'
@@ -14,6 +14,11 @@ export P4CONFIG='.p4rc'
 #export LSCOLORS='exfxcxdxbxegedabagacad'
 # Ubuntu
 #export LS_COLORS='exfxcxdxbxegedabagacad'
+case "`uname`" in
+    Darwin)
+    export BYOBU_PREFIX=`brew --prefix`
+    ;;
+esac
 
 ## Load colors 
 autoload colors zsh/terminfo 
@@ -29,6 +34,11 @@ fi
 
 if [ -e "$HOME/.rvm/bin" ]; then
   PATH="$PATH:$HOME/.rvm/bin"
+  export PATH
+fi
+
+if [ -e "/usr/local/share/python" ]; then
+  PATH="$PATH:/usr/local/share/python"
   export PATH
 fi
 
