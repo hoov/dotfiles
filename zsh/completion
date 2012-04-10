@@ -1,5 +1,11 @@
-autoload -U compinit
-compinit
+unsetopt MENU_COMPLETE
+setopt ALWAYS_TO_END
+setopt AUTO_MENU
+setopt COMPLETE_IN_WORD
+
+zmodload -i zsh/complist
+
+zstyle ':completion:*' list-colors "${LS_COLORS}"
 
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
@@ -22,4 +28,8 @@ function _pip_completion {
 }
 compctl -K _pip_completion pip
 # pip zsh completion end
+#
 
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"

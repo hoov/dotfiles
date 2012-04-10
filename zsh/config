@@ -1,24 +1,17 @@
-#if [[ -n $SSH_CONNECTION ]]; then
-#  export PS1='%m:%3~$(git_info_for_prompt)%# '
-#else
-#  export PS1='%3~$(git_info_for_prompt)%# '
-#fi
-
 export CLICOLOR=1
 export EDITOR='mvim -f --nomru -c "au VimLeave * !open -a Terminal"'
-export GREP_OPTIONS='--color=auto'
 export MAVEN_OPTS='-Xmx512m -XX:MaxPermSize=128m'
 export ANT_OPTS='-Xmx1024m -XX:MaxPermSize=128m'
 export P4CONFIG='.p4rc'
+
+# Grep
+export GREP_OPTIONS='--color=auto'
+export GREP_COLOR='1;32'
+
 # Mac OS
 #export LSCOLORS='exfxcxdxbxegedabagacad'
 # Ubuntu
 #export LS_COLORS='exfxcxdxbxegedabagacad'
-case "`uname`" in
-    Darwin)
-    export BYOBU_PREFIX=`brew --prefix`
-    ;;
-esac
 
 ## Load colors 
 autoload colors zsh/terminfo 
@@ -26,23 +19,20 @@ if [[ "$terminfo[colors]" -ge 8 ]]; then
     colors 
 fi
 
-## AVR GCC
-if [ -e "/usr/local/CrossPack-AVR" ]; then
-  PATH="$PATH:/usr/local/CrossPack-AVR/bin"
-  export PATH
-fi
-
+# RVM Stuff
 if [ -e "$HOME/.rvm/bin" ]; then
   PATH="$PATH:$HOME/.rvm/bin"
   export PATH
+  export USE_BUNDLER=force
 fi
 
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+# Prefer Homebrew Python
 if [ -e "/usr/local/share/python" ]; then
-  PATH="$PATH:/usr/local/share/python"
+  PATH="/usr/local/share/python:$PATH"
   export PATH
 fi
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 
 if [ -e "$HOME/bin" ]; then
   PATH="$PATH:$HOME/bin"
@@ -59,7 +49,7 @@ if [ -e "$HOME/.bin" ]; then
   export PATH
 fi
 
-[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
+[[ -s "$HOME/.tmuxinator/scripts/tmuxinator" ]] && source "$HOME/.tmuxinator/scripts/tmuxinator"
 
 fpath=(~/.zsh/functions $fpath)
 fpath=(~/.zsh/functions/vcs_info $fpath)
@@ -68,27 +58,37 @@ fpath=(~/.zsh/functions/vcs_info/Backends $fpath)
 autoload -U ~/.zsh/functions/*(:t)
 autoload -U ~/.zsh/functions/vcs_info*(:t)
 
-HISTFILE=~/.zsh_history
-HISTSIZE=1000
-SAVEHIST=1000
 REPORTTIME=10 # print elapsed time when more than 10 seconds
 
 setopt NO_BG_NICE # don't nice background tasks
-setopt NO_HUP
 setopt NO_LIST_BEEP
 setopt LOCAL_OPTIONS # allow functions to have local options
 setopt LOCAL_TRAPS # allow functions to have local traps
-setopt HIST_VERIFY
-setopt EXTENDED_HISTORY # add timestamps to history
 setopt PROMPT_SUBST
-setopt CORRECT
-setopt COMPLETE_IN_WORD
 setopt IGNORE_EOF
 
+# Correction
+setopt CORRECT
+setopt CORRECT_ALL
+
+# Directory behavior
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=5000
+SAVEHIST=5000
+
 setopt APPEND_HISTORY # adds history
+setopt EXTENDED_HISTORY # add timestamps to history
 setopt INC_APPEND_HISTORY  # adds history incrementally
+setopt HIST_IGNORE_SPACE # ignore commands with leading spaces
 setopt HIST_IGNORE_ALL_DUPS  # don't record dupes in history
 setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY # verify history expansion commands
+setopt SHARE_HISTORY
 
 zle -N newtab
 
