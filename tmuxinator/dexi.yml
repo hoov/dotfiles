@@ -2,8 +2,8 @@
 # you can make as many tabs as you wish...
 
 project_name: dexi
-project_root: ~/src/thoover-centos-dexi/convert
-pre: sudo /etc/init.d/zookeeper start
+project_root: /src/thoover-flexo-dexi/convert
+#pre: sudo /etc/init.d/zookeeper start
 tabs:
   - editor:
       layout: main-horizontal

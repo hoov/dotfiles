@@ -44,6 +44,11 @@ if [ -e "/usr/local/bin" ]; then
   export PATH
 fi
 
+if [ -e "/usr/local/sbin" ]; then
+  PATH="/usr/local/sbin:$PATH"
+  export PATH
+fi
+
 if [ -e "$HOME/.bin" ]; then
   PATH="$HOME/.bin:$PATH"
   export PATH
