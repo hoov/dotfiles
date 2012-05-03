@@ -26,6 +26,10 @@ fi
 # ls
 if [[ $UNAME == "Linux" ]]; then
   alias ls='ls --color=auto'
+elif [[ $UNAME == "Darwin" ]]; then
+  if [[ -x $(which gls) ]]; then
+      alias ls='gls --color=auto'
+  fi
 fi
 
 alias ll='ls -l'

@@ -8,10 +8,14 @@ export P4CONFIG='.p4rc'
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 
-# Mac OS
-#export LSCOLORS='exfxcxdxbxegedabagacad'
-# Ubuntu
-#export LS_COLORS='exfxcxdxbxegedabagacad'
+# Load up dircolors
+if [[ $OSTYPE == darwin* ]]; then
+  if [[ -x $(which gdircolors) ]]; then
+    eval `gdircolors "$HOME/.dircolors"`
+  fi
+else
+  eval `dircolors "$HOME/.dircolors"`
+fi
 
 ## Load colors 
 autoload colors zsh/terminfo 
@@ -106,3 +110,5 @@ bindkey '^[[3~' delete-char
 bindkey '^[^N' newtab
 bindkey '^?' backward-delete-char 
 bindkey '^f' history-incremental-search-backward
+
+# vim: sw=2 ts=2 expandtab syntax=zsh
