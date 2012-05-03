@@ -1,4 +1,9 @@
+# Load and run compinit
+autoload -U compinit
+compinit -i
+
 unsetopt MENU_COMPLETE
+unsetopt FLOWCONTROL
 setopt ALWAYS_TO_END
 setopt AUTO_MENU
 setopt COMPLETE_IN_WORD
@@ -33,3 +38,5 @@ compctl -K _pip_completion pip
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
+
+# vim: sw=2 ts=2 expandtab syntax=zsh
