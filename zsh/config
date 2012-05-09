@@ -1,5 +1,14 @@
 export CLICOLOR=1
-export EDITOR='mvim -f --nomru -c "au VimLeave * !open -a Terminal"'
+# I want Vim as my editor, but Emacs keybindings for zle
+if [[ $OSTYPE == darwin* ]]; then
+  if [[ -x $(which mvim) ]]; then
+    export EDITOR='mvim -v'
+  fi
+else
+  export EDITOR='vim'
+fi
+bindkey -e
+
 export MAVEN_OPTS='-Xmx512m -XX:MaxPermSize=128m'
 export ANT_OPTS='-Xmx1024m -XX:MaxPermSize=128m'
 export P4CONFIG='.p4rc'
