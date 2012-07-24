@@ -106,7 +106,7 @@ setopt HIST_IGNORE_SPACE # ignore commands with leading spaces
 setopt HIST_IGNORE_ALL_DUPS  # don't record dupes in history
 setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY # verify history expansion commands
-setopt SHARE_HISTORY
+#setopt SHARE_HISTORY
 
 zle -N newtab
 
