@@ -32,14 +32,8 @@ if [[ "$terminfo[colors]" -ge 8 ]]; then
     colors 
 fi
 
-# RVM Stuff
-if [ -e "$HOME/.rvm/bin" ]; then
-  PATH="$PATH:$HOME/.rvm/bin"
-  export PATH
-  export USE_BUNDLER=force
-fi
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+# rbenv stuff
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # Prefer Homebrew Python
 if [ -e "/usr/local/share/python" ]; then
