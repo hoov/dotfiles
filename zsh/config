@@ -32,14 +32,21 @@ if [[ "$terminfo[colors]" -ge 8 ]]; then
     colors 
 fi
 
-# rbenv stuff
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if [[ -x $(which rbenv) ]]; then
+  eval "$(rbenv init -)"
+fi
 
 # Prefer Homebrew Python
 if [ -e "/usr/local/share/python" ]; then
   PATH="/usr/local/share/python:$PATH"
   export PATH
 fi
+
+if [ -e "/usr/local/share/npm/bin" ]; then
+  PATH="/usr/local/share/npm/bin:$PATH"
+  export PATH
+fi
+
 
 if [ -e "$HOME/bin" ]; then
   PATH="$PATH:$HOME/bin"
