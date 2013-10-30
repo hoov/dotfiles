@@ -1,18 +1,26 @@
 [user]
-	name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
-	email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
+    name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
+    email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
 [alias]
-	co = checkout
+    co = checkout
     vlog = log --pretty=oneline --abbrev-commit --graph --decorate
 [apply]
-	whitespace = nowarn
+    whitespace = nowarn
 [color]
-	branch = auto
+    branch = auto
     decorate = auto
-	diff = auto
+    diff = auto
     grep = auto
-	status = auto
+    status = auto
     ui = true
 [core]
-	editor = <%= ENV['EDITOR'] %>
-	excludesfile = <%= ENV['HOME'] %>/.gitignore
+    editor = <%= ENV['EDITOR'] %>
+    excludesfile = <%= ENV['HOME'] %>/.gitignore
+[diff] 
+    tool = araxis
+[merge] 
+    tool = araxis
+[push]
+    default = matching
+[status]
+    submodule = 1
