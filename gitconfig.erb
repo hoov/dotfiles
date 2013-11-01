@@ -3,6 +3,8 @@
     email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
 [alias]
     co = checkout
+    incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate ..@{u}
+    outgoing = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate  @{u}..
     vlog = log --pretty=oneline --abbrev-commit --graph --decorate
 [apply]
     whitespace = nowarn
@@ -23,4 +25,4 @@
 [push]
     default = matching
 [status]
-    submodule = 1
+    submodulesummary = 1
