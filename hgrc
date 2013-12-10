@@ -4,5 +4,6 @@ ignore = ~/.hgignore
 
 [extensions]
 color =
-hgext.fetch=
+hgext.fetch =
+purge =
 
