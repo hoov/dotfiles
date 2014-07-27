@@ -17,7 +17,9 @@ set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 # Prefer /usr/local/bin
 set PATH /usr/local/bin $PATH
 
-set -x JAVA_HOME (/usr/libexec/java_home)
+if test -e /usr/libexec/java_home
+    set -x JAVA_HOME /usr/libexec/java_home
+end
 
 if test -e $HOME/.awscreds
     set -x AWS_CREDENTIAL_FILE $HOME/.awscreds

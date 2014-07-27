@@ -1,3 +1,7 @@
 function vim
-    mvim -v $argv;
+    if test (uname) = Darwin
+        mvim -v $argv;
+    else
+        command vim $argv;
+    end
 end

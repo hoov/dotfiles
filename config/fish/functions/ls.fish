@@ -14,7 +14,7 @@ if command ls --version 1>/dev/null 2>/dev/null
 
     if not set -q LS_COLORS
         if type -f dircolors >/dev/null
-            eval (dircolors -c | sed 's/>&\/dev\/null$//')
+            eval (dircolors -c ~/.dircolors | sed 's/>&\/dev\/null$//')
         end
     end
 else if command gls --version 1>/dev/null 2>/dev/null
@@ -29,7 +29,7 @@ else if command gls --version 1>/dev/null 2>/dev/null
 
     if not set -q LS_COLORS
         if type -f gdircolors >/dev/null
-            eval (gdircolors -c | sed 's/>&\/dev\/null$//')
+            eval (gdircolors -c ~/.dircolors | sed 's/>&\/dev\/null$//')
         end
     end
 
