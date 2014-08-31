@@ -1,7 +1,8 @@
 function vim
-    if test (uname) = Darwin
-        mvim -v $argv;
-    else
-        command vim $argv;
+    switch (uname)
+        case Darwin
+            mvim -v $argv
+        case '*'
+            command vim $argv
     end
 end

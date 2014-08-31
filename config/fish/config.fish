@@ -17,8 +17,11 @@ set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 # Prefer /usr/local/bin
 set PATH /usr/local/bin $PATH
 
-if test -e /usr/libexec/java_home
-    set -x JAVA_HOME /usr/libexec/java_home
+switch (uname)
+    case Darwin
+        set -x JAVA_HOME /usr/libexec/java_home
+    case Linux
+        set -x JAVA_HOME /usr/lib/jvm/default-java/
 end
 
 if test -e $HOME/.awscreds
