@@ -21,7 +21,7 @@ switch (uname)
     case Darwin
         set -x JAVA_HOME /usr/libexec/java_home
     case Linux
-        set -x JAVA_HOME /usr/lib/jvm/default-java/
+        set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
 end
 
 if test -e $HOME/.awscreds
