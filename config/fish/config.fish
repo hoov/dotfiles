@@ -32,8 +32,4 @@ if test -e /usr/local/Library/LinkedKegs/aws-iam-tools/jars
     set -x AWS_IAM_HOME /usr/local/Library/LinkedKegs/aws-iam-tools/jars
 end
 
-# rbenv setup
-set PATH ~/.rbenv/bin $PATH
-. (rbenv init -|psub)
-
 set -x P4CONFIG '.p4rc'
