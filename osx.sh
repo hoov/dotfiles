@@ -18,7 +18,4 @@ defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 # (e.g. enable Tab in modal dialogs)
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
-# Set a blazingly fast keyboard repeat rate
-defaults write NSGlobalDomain KeyRepeat -int 0
-
 echo "Done. Note that some of these changes require a logout/restart to take effect."

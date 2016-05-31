@@ -31,3 +31,11 @@ end
 if test -e /usr/local/Library/LinkedKegs/aws-iam-tools/jars 
     set -x AWS_IAM_HOME /usr/local/Library/LinkedKegs/aws-iam-tools/jars
 end
+
+if test -f $HOME/.homebrew-github-token
+    set -x HOMEBREW_GITHUB_API_TOKEN (cat $HOME/.homebrew-github-token)
+end
+
+if test -f $HOME/.gpg-agent-info
+    eval (sed -e 's/^\(.*\)=\(.*\)$/set \1 \2/' ~/.gpg-agent-info | tr '\n' '; ')
+end
