@@ -32,4 +32,4 @@ if test -e /usr/local/Library/LinkedKegs/aws-iam-tools/jars
     set -x AWS_IAM_HOME /usr/local/Library/LinkedKegs/aws-iam-tools/jars
 end
 
-set -x P4CONFIG '.p4rc'
+set -gx GOPATH /usr/local/insightsquared/is_engine/bbase/utils/is_charter2/

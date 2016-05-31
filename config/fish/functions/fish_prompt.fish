@@ -4,7 +4,7 @@ function fish_prompt --description 'Write out the prompt'
 
 	# Just calculate these once, to save a few cycles when displaying the prompt
 	if not set -q __fish_prompt_hostname
-		set -g __fish_prompt_hostname (hostname|cut -d . -f 1)
+		set -g __fish_prompt_hostname (hostname -f |sed s/.local//)
 	end
 
 	if not set -q __fish_prompt_normal
