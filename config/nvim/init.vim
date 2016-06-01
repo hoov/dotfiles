@@ -2,9 +2,21 @@ if &shell =~# 'fish$'
     set shell=/bin/bash
 endif
 
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+    !./install.py
+  endif
+endfunction
+
 call plug#begin("~/.config/nvim/plugged")
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 Plug 'airblade/vim-gitgutter'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-fugitive'
@@ -25,15 +37,27 @@ set wildignore+=*.o,*.obj,.git,*.pyc
 set foldcolumn=4
 set number
 
+set listchars=tab:▸\ ,eol:¬,trail:-,extends:>,precedes:<,nbsp:+
+
+" Never want to use the mouse
+set mouse=
+
 " Shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
 
 " Plugin configuration
 
+" airblade/vim-gitgutter
+nmap <leader>g :GitGutterLineHighlightsToggle<CR>
+
 " ctrlpvim/ctrlp.vim
 nnoremap <Leader>o :CtrlP<CR>
 nnoremap <Leader>b :CtrlPBuffer<CR>
 nnoremap <Leader>f :CtrlPMRUFiles<CR>
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+
+" majutsushi/tagbar
+nmap <F8> :TagbarToggle<CR>
 
 " scrooloose/nerdtree
 nmap <leader>n :NERDTreeToggle<CR>
