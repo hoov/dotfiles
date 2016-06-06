@@ -19,7 +19,7 @@ set PATH /usr/local/bin $PATH
 
 switch (uname)
     case Darwin
-        set -x JAVA_HOME /usr/libexec/java_home
+        set -x JAVA_HOME (/usr/libexec/java_home -v 1.8)
     case Linux
         set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
 end
