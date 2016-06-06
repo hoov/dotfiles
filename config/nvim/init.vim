@@ -12,11 +12,13 @@ function! BuildYCM(info)
   endif
 endfunction
 
-call plug#begin("~/.config/nvim/plugged")
+call plug#begin('~/.config/nvim/plugged')
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 Plug 'airblade/vim-gitgutter'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'dag/vim-fish'
 Plug 'majutsushi/tagbar'
+Plug 'rking/ag.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-fugitive'
@@ -25,27 +27,32 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " Themes
-Plug 'nanotech/jellybeans.vim'
+Plug 'chriskempson/base16-vim'
 call plug#end()
 
-colorscheme jellybeans
 let mapleader=","
+
+set cursorline
+
+set hidden
+
+set foldcolumn=4
+set foldlevel=100
+set number
 
 set wildmode=list:longest
 set wildignore+=*.o,*.obj,.git,*.pyc
 
-set foldcolumn=4
-set number
-
-set listchars=tab:▸\ ,eol:¬,trail:-,extends:>,precedes:<,nbsp:+
-
 " Never want to use the mouse
 set mouse=
 
-" Shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
+set listchars=tab:▸\ ,eol:¬,trail:-,extends:>,precedes:<,nbsp:+
 
 " Plugin configuration
+
+" Valloric/YouCompleteMe
+nnoremap <leader>jd :YcmCompleter GoTo<CR>
 
 " airblade/vim-gitgutter
 nmap <leader>g :GitGutterLineHighlightsToggle<CR>
@@ -59,6 +66,10 @@ let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 " majutsushi/tagbar
 nmap <F8> :TagbarToggle<CR>
 
+" rking/ag.vim
+map <Leader>a <Esc>:Ag!<CR>
+map <Leader>A <Esc>:Ag!
+
 " scrooloose/nerdtree
 nmap <leader>n :NERDTreeToggle<CR>
 
@@ -67,6 +78,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_python_checkers = ['flake8']
 
 " vim-airline/vim-airline
 let g:airline_powerline_fonts = 1
@@ -83,3 +95,14 @@ nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 nmap <leader>- <Plug>AirlineSelectPrevTab
 nmap <leader>+ <Plug>AirlineSelectNextTab
+
+" chriskempson/base16-vim
+let base16colorspace=256
+set background=dark
+colorscheme base16-solarized
+
+" Filetypes
+
+" Python
+let python_highlight_all = 1
+autocmd FileType python setlocal expandtab autoindent foldmethod=indent shiftwidth=4 softtabstop=4
