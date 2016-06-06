@@ -40,4 +40,4 @@ if test -f $HOME/.gpg-agent-info
     eval (sed -e 's/^\(.*\)=\(.*\)$/set \1 \2/' ~/.gpg-agent-info | tr '\n' '; ')
 end
 
-eval sh $HOME/.config/base16-shell/base16-default.solarized.sh
+eval sh $HOME/.config/base16-shell/base16-solarized.dark.sh
