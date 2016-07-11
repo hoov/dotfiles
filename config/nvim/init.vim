@@ -20,7 +20,6 @@ Plug 'dag/vim-fish'
 Plug 'kchmck/vim-coffee-script'
 Plug 'kshenoy/vim-signature'
 Plug 'majutsushi/tagbar'
-Plug 'nathanaelkane/vim-indent-guides'
 Plug 'rking/ag.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
@@ -29,6 +28,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'yggdroot/indentline'
 
 " Themes
 Plug 'chriskempson/base16-vim'
@@ -47,6 +47,8 @@ set number
 set wildmode=list:longest
 set wildignore+=*.o,*.obj,.git,*.pyc
 
+set scrolloff=3
+"
 " Never want to use the mouse
 set mouse=
 
@@ -104,7 +106,11 @@ nmap <leader>+ <Plug>AirlineSelectNextTab
 " chriskempson/base16-vim
 let base16colorspace=256
 set background=dark
-colorscheme base16-solarized
+colorscheme base16-solarized-dark
+
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=black
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=darkgrey
 
 " Filetypes
 
