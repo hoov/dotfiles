@@ -44,6 +44,8 @@ set foldcolumn=4
 set foldlevel=100
 set number
 
+set clipboard+=unnamedplus
+
 set wildmode=list:longest
 set wildignore+=*.o,*.obj,.git,*.pyc
 
