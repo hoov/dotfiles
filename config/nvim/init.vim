@@ -108,7 +108,7 @@ nmap <leader>+ <Plug>AirlineSelectNextTab
 " chriskempson/base16-vim
 let base16colorspace=256
 set background=dark
-colorscheme base16-solarized-dark
+colorscheme base16-default-dark
 
 let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=black
