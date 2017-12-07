@@ -1,7 +1,0 @@
-fpath=(~/.zsh/prompts $fpath)
-typeset -U fpath
-
-autoload -U promptinit
-promptinit
-
-prompt hoov

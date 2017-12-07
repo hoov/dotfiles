@@ -1,2 +1,0 @@
-#compdef src
-_files -W /src -/
