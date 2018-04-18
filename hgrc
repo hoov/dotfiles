@@ -1,9 +1,0 @@
-[ui]
-username = Tom Hoover <thoover@alum.mit.edu>
-ignore = ~/.hgignore
-
-[extensions]
-color =
-hgext.fetch =
-purge =
-
