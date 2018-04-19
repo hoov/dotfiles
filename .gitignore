@@ -1,4 +1,8 @@
 config/fish/fish_history
-config/fish/generated_completions/
 config/fish/fishd.*
+config/fish/generated_completions/
+config/fisherman/
+config/fisherman-plugins/completions/
+config/fisherman-plugins/conf.d/
+config/fisherman-plugins/functions/
 config/nvim/plugged/
