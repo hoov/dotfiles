@@ -1,0 +1,35 @@
+{
+  "segments": {
+    "right": [
+      {
+        "function": "powerline.segments.common.players.spotify",
+        "name": "player",
+        "args": {
+          "format": "{state_symbol} {artist} - {title}"
+        }
+      },
+      {
+        "function": "powerline.segments.common.sys.uptime",
+        "priority": 50,
+        "args": {
+          "minutes_format": "",
+          "seconds_format": ""
+        },
+        "before": " ⇑  ",
+        "draw_hard_divider": true
+      },
+      {
+        "function": "powerline.segments.common.sys.system_load",
+        "priority": 50
+      },
+      {
+        "function": "powerline.segments.common.net.external_ip",
+        "draw_hard_divider": false,
+        "before": "ⓦ  "
+      },
+      {
+        "function": "powerline.segments.common.net.hostname"
+      }
+    ]
+  }
+}
