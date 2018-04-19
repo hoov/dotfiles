@@ -17,29 +17,52 @@ set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 # Prefer /usr/local/bin
 set PATH /usr/local/bin $PATH
 
+
 switch (uname)
-    case Darwin
-        set -x JAVA_HOME (/usr/libexec/java_home -v 1.8)
-    case Linux
-        set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
+  case Darwin
+    set -x JAVA_HOME (/usr/libexec/java_home)
+    # If coretuils is installed, prefer those
+    if type -q brew
+      and test -e (brew --prefix coreutils)/libexec/gnubin
+      set PATH (brew --prefix coreutils)/libexec/gnubin $PATH
+    end
+  case Linux
+    set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
+end
+
+if type -q powerline-daemon
+    set -gx POWERLINE_HOME (pip show powerline-status 2>/dev/null | grep Location | cut -f2 -d" ")
 end
 
 if test -e $HOME/.awscreds
-    set -x AWS_CREDENTIAL_FILE $HOME/.awscreds
+  set -x AWS_CREDENTIAL_FILE $HOME/.awscreds
 end
 
 if test -e /usr/local/Library/LinkedKegs/aws-iam-tools/jars 
-    set -x AWS_IAM_HOME /usr/local/Library/LinkedKegs/aws-iam-tools/jars
+  set -x AWS_IAM_HOME /usr/local/Library/LinkedKegs/aws-iam-tools/jars
 end
 
 if test -f $HOME/.homebrew-github-token
-    set -x HOMEBREW_GITHUB_API_TOKEN (cat $HOME/.homebrew-github-token)
+  set -x HOMEBREW_GITHUB_API_TOKEN (cat $HOME/.homebrew-github-token)
 end
 
 if test -f $HOME/.gpg-agent-info
-    eval (sed -e 's/^\(.*\)=\(.*\)$/set \1 \2/' ~/.gpg-agent-info | tr '\n' '; ')
+  eval (sed -e 's/^\(.*\)=\(.*\)$/set \1 \2/' ~/.gpg-agent-info | tr '\n' '; ')
 end
 
+# Fisherman stuff
+set -U fish_path $HOME/.config/fisherman-plugins
+
+for file in $fish_path/conf.d/*.fish
+  builtin source $file ^ /dev/null
+end
+
+set fish_function_path $fish_path/functions $fish_function_path
+set fish_complete_path $fish_path/completions $fish_complete_path
+
 if status --is-interactive
-    eval sh $HOME/.config/base16-shell/scripts/base16-solarized-dark.sh
+  eval sh $HOME/.config/base16-shell/scripts/base16-solarized-dark.sh
+  if type -q rbenv
+    source (rbenv init -|psub)
+  end
 end
