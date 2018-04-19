@@ -1,0 +1,3 @@
+EXCLUDES="Brewfile README.rdoc Rakefile"
+SYMLINK_DIRS="config"
+DOTFILES_DIR="$HOME/src/dotfiles"
