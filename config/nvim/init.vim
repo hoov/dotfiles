@@ -22,15 +22,20 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
+Plug 'docker/docker', { 'rtp': '/contrib/syntax/vim/' }
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'kchmck/vim-coffee-script'
 Plug 'kshenoy/vim-signature'
 Plug 'majutsushi/tagbar'
-Plug 'rodjek/vim-puppet'
 Plug 'rking/ag.vim'
+Plug 'rodjek/vim-puppet'
 Plug 'scrooloose/nerdtree'
 Plug 'ternjs/tern_for_vim', { 'do': function('BuildTern') }
+Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rake'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
@@ -61,7 +66,10 @@ set wildmode=list:longest
 set wildignore+=*.o,*.obj,.git,*.pyc
 
 set scrolloff=3
-"
+
+set ignorecase
+set smartcase
+
 " Never want to use the mouse
 set mouse=
 
@@ -86,6 +94,9 @@ map <Leader>A <Esc>:Ag!
 " scrooloose/nerdtree
 nmap <leader>n :NERDTreeToggle<CR>
 nmap <leader>N :NERDTreeFind<CR>
+" If vim is opened without a file specified, open NERDTree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " vim-airline/vim-airline
 let g:airline_powerline_fonts = 1
@@ -124,9 +135,12 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=darkgrey
 
 " Filetypes
 
+" General two space indent for certain filetypes
+autocmd FileTYpe gitconfig,json,yaml setlocal expandtab shiftwidth=2 softtabstop=2
+
 " JSON
-autocmd FileType json setlocal expandtab autoindent foldmethod=syntax shiftwidth=2 softtabstop=2
+autocmd FileType json setlocal foldmethod=syntax
 
 " Python
 let python_highlight_all = 1
-autocmd FileType python setlocal expandtab autoindent foldmethod=indent shiftwidth=4 softtabstop=4
+autocmd FileType python setlocal expandtab foldmethod=indent shiftwidth=4 softtabstop=4
