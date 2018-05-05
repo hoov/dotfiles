@@ -17,6 +17,9 @@ set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 # Prefer /usr/local/bin
 set PATH /usr/local/bin $PATH
 
+# And prefer the path in .local evn more
+set PATH {$HOME}/.local/bin $PATH
+
 function __add_gnubin
   if test -e /usr/local/opt/$argv[1]/libexec/gnubin
     set PATH /usr/local/opt/$argv[1]/libexec/gnubin $PATH
