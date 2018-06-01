@@ -19,18 +19,19 @@ function! BuildTern(info)
 endfunction
 
 call plug#begin('~/.config/nvim/plugged')
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+"Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
 Plug 'docker/docker', { 'rtp': '/contrib/syntax/vim/' }
 Plug 'jmcantrell/vim-virtualenv'
+Plug 'jremmen/vim-ripgrep'
 Plug 'kchmck/vim-coffee-script'
 Plug 'kshenoy/vim-signature'
 Plug 'majutsushi/tagbar'
-Plug 'rking/ag.vim'
+Plug 'rizzatti/dash.vim'
 Plug 'rodjek/vim-puppet'
 Plug 'scrooloose/nerdtree'
-Plug 'ternjs/tern_for_vim', { 'do': function('BuildTern') }
+"Plug 'ternjs/tern_for_vim', { 'do': function('BuildTern') }
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-projectionist'
@@ -45,6 +46,7 @@ Plug 'yggdroot/indentline'
 
 " Locally installed plugins
 Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
 
 " Themes
 Plug 'chriskempson/base16-vim'
@@ -74,7 +76,9 @@ set smartcase
 set mouse=
 
 nmap <leader>l :set list!<CR>
-set listchars=tab:▸\ ,eol:¬,trail:-,extends:>,precedes:<,nbsp:+
+set showbreak=↪
+set fillchars=vert:│,fold:─
+set listchars=tab:▸\ ,eol:¬,trail:·,extends:⟫,precedes:⟪,nbsp:␣
 
 " Plugin configuration
 
@@ -84,12 +88,16 @@ nnoremap <leader>jd :YcmCompleter GoTo<CR>
 " airblade/vim-gitgutter
 nmap <leader>g :GitGutterLineHighlightsToggle<CR>
 
+" jremmen/vim-ripgrep
+map <Leader>r <Esc>:Rg<CR>
+map <Leader>R <Esc>:Rg 
+let g:rg_highlight = 1
+
 " majutsushi/tagbar
 nmap <F8> :TagbarToggle<CR>
 
-" rking/ag.vim
-map <Leader>a <Esc>:Ag!<CR>
-map <Leader>A <Esc>:Ag!
+" rizzatti/dash.vim
+nmap <silent> <leader>d <Plug>DashSearch
 
 " scrooloose/nerdtree
 nmap <leader>n :NERDTreeToggle<CR>
@@ -127,7 +135,7 @@ set background=dark
 colorscheme base16-default-dark
 
 " fzf
-nnoremap <Leader>o :FZF<CR>
+nnoremap <Leader>o :Files<CR>
 
 let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=black
@@ -136,11 +144,42 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=darkgrey
 " Filetypes
 
 " General two space indent for certain filetypes
-autocmd FileTYpe gitconfig,json,yaml setlocal expandtab shiftwidth=2 softtabstop=2
+augroup vimrc
+  autocmd!
+  " Only highlight current lines when window has focus
+  autocmd WinEnter,InsertLeave * set cursorline
+  autocmd WinLeave,InsertEnter * set nocursorline
+  autocmd FileType gitconfig,json,ruby,vim,yaml setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=2
+augroup END
+
+" Fish Shell
+augroup filetype_fish
+  autocmd!
+  autocmd FileType fish compiler fish
+  autocmd FileTYpe fish setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4 foldmethod=expr
+augroup END
+
+" Commit messages
+augroup filetype_gitcommit
+  autocmd!
+  autocmd FileType gitcommit setlocal spell nofoldenable
+augroup END
 
 " JSON
-autocmd FileType json setlocal foldmethod=syntax
+augroup filetype_json
+  autocmd!
+  autocmd FileType json setlocal foldmethod=syntax
+augroup END
 
 " Python
-let python_highlight_all = 1
-autocmd FileType python setlocal expandtab foldmethod=indent shiftwidth=4 softtabstop=4
+augroup filetype_python
+  autocmd!
+  let python_highlight_all = 1
+  autocmd FileType python setlocal expandtab foldmethod=indent shiftwidth=4 softtabstop=4 tabstop=4
+augroup END
+
+" Ruby
+augroup filetype_ruby
+  autocmd!
+  autocmd FileType ruby compiler ruby
+augroup END
