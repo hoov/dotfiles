@@ -4,12 +4,17 @@ sudo -v
 
 brew bundle
 
+# Sprinkle these around to avoid timeouts
+sudo -v
+
 model_xpath="/plist[@version='1.0']/array/dict/key[.='_items']/following-sibling::*[1]/dict/key[.='machine_model']/following-sibling::*[1]/text()"
 is_laptop=`/usr/sbin/system_profiler -xml SPHardwareDataType | xmlstarlet sel -q -t -v "$model_xpath" 2>/dev/null | grep "^MacBook"`
 
 # Pip is installed by virtue of homebrew by this point
 pip install --upgrade pip
 pip install --upgrade -r requirements.txt
+
+sudo -v
 
 RCRC=rcrc rcup -d .
 
@@ -178,5 +183,20 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -boo
 
 sudo killall -hup cfprefsd
 sudo killall -hup Dock
+
+## SlowQuitApps
+defaults write com.dteoh.SlowQuitApps delay -int 1500
+
+# Blacklist mode
+defaults write com.dteoh.SlowQuitApps invertList -bool YES
+
+# Slow quit on browsers and terminals
+defaults write com.dteoh.SlowQuitApps whitelist -array-add com.googlecode.iterm2
+defaults write com.dteoh.SlowQuitApps whitelist -array-add io.alacritty
+
+defaults write com.dteoh.SlowQuitApps whitelist -array-add com.google.Chrome
+defaults write com.dteoh.SlowQuitApps whitelist -array-add org.mozilla.firefoxdeveloperedition
+
+brew cu --no-brew-update -af slowquitapps
 
 echo "Done. Note that some of these changes require a logout/restart to take effect."
