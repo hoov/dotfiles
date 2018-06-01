@@ -20,6 +20,11 @@ set PATH /usr/local/bin $PATH
 # And prefer the path in .local evn more
 set PATH {$HOME}/.local/bin $PATH
 
+# Rust
+if test -e $HOME/.cargo/bin
+    set PATH $HOME/.cargo/bin $PATH
+end
+
 function __add_gnubin
   if test -e /usr/local/opt/$argv[1]/libexec/gnubin
     set PATH /usr/local/opt/$argv[1]/libexec/gnubin $PATH
@@ -27,26 +32,21 @@ function __add_gnubin
 end
 
 switch (uname)
-  case Darwin
-    set -x JAVA_HOME (/usr/libexec/java_home)
-    # If coretuils is installed, prefer those
-    if type -q brew
-      for pkg in coreutils findutils gnu-sed
-        __add_gnubin $pkg
-      end
-
-      test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
-    end
-  case Linux
-    set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
+    case Darwin
+        set -x JAVA_HOME (/usr/libexec/java_home)
+        # If coretuils is installed, prefer those
+        if type -q brew
+            for pkg in coreutils findutils gnu-sed
+                __add_gnubin $pkg
+            end
+        end
+        test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+    case Linux
+        set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
 end
 
 if type -q powerline-daemon
-  set -gx POWERLINE_HOME (pip show powerline-status 2>/dev/null | grep Location | cut -f2 -d" ")
-end
-
-if test -f $HOME/.homebrew-github-token
-  set -x HOMEBREW_GITHUB_API_TOKEN (cat $HOME/.homebrew-github-token)
+    set -gx POWERLINE_HOME (pip show powerline-status 2>/dev/null | grep Location | cut -f2 -d" ")
 end
 
 if type -q nvim
@@ -55,10 +55,13 @@ else
   set -gx EDITOR vim
 end
 
-# I think this was for Yubikey stuff
-#if test -f $HOME/.gpg-agent-info
-#  eval (sed -e 's/^\(.*\)=\(.*\)$/set \1 \2/' ~/.gpg-agent-info | tr '\n' '; ')
-#end
+for file in $HOME/.config/fish/local.d/*.fish
+  builtin source $file ^ /dev/null
+end
+
+for file in $fish_path/conf.d/*.fish
+  builtin source $file ^ /dev/null
+end
 
 # Fisherman stuff
 set -U fish_path $HOME/.config/fisherman-plugins
@@ -71,6 +74,7 @@ set fish_function_path $fish_path/functions $fish_function_path
 set fish_complete_path $fish_path/completions $fish_complete_path
 
 if status --is-interactive
+  source $HOME/.config/base16-shell/profile_helper.fish
   eval sh $HOME/.config/base16-shell/scripts/base16-solarized-dark.sh
 
   type -q rbenv; and source (rbenv init -|psub)
