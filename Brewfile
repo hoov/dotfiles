@@ -1,8 +1,10 @@
 cask_args appdir: "/Applications"
 
+tap "buo/cask-upgrade"
 tap "caskroom/cask"
 tap "caskroom/fonts"
 tap "caskroom/versions"
+tap "dteoh/sqa"
 tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/core"
@@ -30,7 +32,7 @@ brew "pstree"
 brew "rbenv"
 brew "reattach-to-user-namespace"
 brew "redis", restart_service: true
-brew "the_silver_searcher"
+brew "ripgrep"
 brew "tmux"
 brew "tree"
 brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
@@ -46,7 +48,10 @@ cask "xscreensaver"
 cask "caskroom/versions/firefox-developer-edition"
 cask "caskroom/versions/iterm2-beta"
 
+cask "dteoh/sqa/slowquitapps"
+
 mas "Dashlane", id: 552383089
 mas "OmniGraffle", id: 711830901
+mas "Skitch", id: 425955336
 mas "Slack", id: 803453959
 mas "Xcode", id: 497799835
