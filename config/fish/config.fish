@@ -18,11 +18,13 @@ set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 set PATH /usr/local/bin $PATH
 
 # And prefer the path in .local evn more
-set PATH {$HOME}/.local/bin $PATH
+if test -e $HOME/.local/bin
+  set PATH {$HOME}/.local/bin $PATH
+end
 
 # Rust
 if test -e $HOME/.cargo/bin
-    set PATH $HOME/.cargo/bin $PATH
+  set PATH $HOME/.cargo/bin $PATH
 end
 
 function __add_gnubin
