@@ -1,29 +1,53 @@
 [user]
-    name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
-    email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
+  name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
+  email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
 [alias]
-    co = checkout
-    incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate ..@{u}
-    outgoing = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate  @{u}..
-    vlog = log --pretty=oneline --abbrev-commit --graph --decorate
+  co = checkout
+  incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate ..@{u}
+  outgoing = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate  @{u}..
+  patch = !git --no-pager diff --no-color
+  up = pull --rebase --autostash
+  vlog = log --pretty=oneline --abbrev-commit --graph --decorate
 [apply]
-    whitespace = nowarn
+  whitespace = nowarn
 [color]
-    branch = auto
-    decorate = auto
-    diff = auto
-    grep = auto
-    status = auto
-    ui = true
+  ui = auto
+[color "diff-highlight"]
+  newHighlight = green bold 22
+  newNormal = green bold
+  oldHighlight = red bold 52
+  oldNormal = red bold
+[color "diff"]
+  commit = yellow bold
+  frag = magenta bold
+  meta = yellow
+  new = green bold
+  old = red bold
+  whitespace = red reverse
+[commit]
+  verbose = true
 [core]
-    editor = <%= ENV['EDITOR'] %>
-    excludesfile = <%= ENV['HOME'] %>/.gitignore
+  autocrlf = false
+  editor = <% ENV['EDITOR'] %>
+  excludesfile = <% ENV['NOME'] %>/.gitignore
+  pager = diff-so-fancy | less --tabs=4 -RFX
 [diff] 
-    tool = araxis
-    compactionHeuristic = 1
+  colorMoved = zebra
+  compactionHeuristic = true
+  mnemonicprefix = true
+  tool = araxis
+[fetch]
+  prune = true
+  pruneTags = true
 [merge] 
-    tool = araxis
+  tool = araxis
+  ff = only
 [push]
-    default = matching
+  default = current
+[rerere]
+  enabled = 1
 [status]
-    submodulesummary = 1
+  submodulesummary = 1
+
+[includeIf "gitdir:~/src/clora/"]
+  path = ~/src/clora/.gitconfig
