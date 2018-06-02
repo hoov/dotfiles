@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ ! -f ${HOME}/.gitconfig.local ]; then
+  read -p "Name [Tom Hoover]: " USERNAME
+  read -p "Email [my gmail]: " EMAIL
+  
+  USERNAME=${USERNAME:-Tom Hoover}
+  # Silly encoding so my email isn't scraped as easily
+  DEFAULT=$(echo Z3ViYmlyZUB0em52eS5wYnoK | base64 --decode | tr 'A-Za-z' 'N-ZA-Mn-za-m')
+  EMAIL=${EMAIL:-$DEFAULT}
+  EMAIL=${EMAIL} USERNAME=${USERNAME} erb -v ../gitconfig.local.erb > ${HOME}/.gitconfig.local
+fi

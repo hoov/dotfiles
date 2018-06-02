@@ -1,3 +1,11 @@
-EXCLUDES="Brewfile README.rdoc Rakefile requirements.txt"
+EXCLUDES=(
+  "Brewfile"
+  "README.rdoc"
+  "debian.sh"
+  "gitconfig.local.erb"
+  "install.sh"
+  "osx.sh"
+  "requirements.txt")
+EXCLUDES=${EXCLUDES[@]}
 SYMLINK_DIRS="config"
 DOTFILES_DIRS="$HOME/src/dotfiles"

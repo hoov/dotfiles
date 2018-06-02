@@ -1,7 +1,0 @@
-# Dropbox stuff
---ignore-dir=linux_dependencies
---ignore-dir=mac_dependencies
---ignore-dir=win_dependencies
---ignore-dir=python2.7
---smart-case
---sort-files

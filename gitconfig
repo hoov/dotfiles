@@ -1,6 +1,3 @@
-[user]
-  name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
-  email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
 [alias]
   co = checkout
   incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate ..@{u}
@@ -28,8 +25,7 @@
   verbose = true
 [core]
   autocrlf = false
-  editor = <% ENV['EDITOR'] %>
-  excludesfile = <% ENV['NOME'] %>/.gitignore
+  excludesfile = ~/.gitignore
   pager = diff-so-fancy | less --tabs=4 -RFX
 [diff] 
   colorMoved = zebra
@@ -48,6 +44,9 @@
   enabled = 1
 [status]
   submodulesummary = 1
+
+[include]
+  path = ~/.gitconfig.local
 
 [includeIf "gitdir:~/src/clora/"]
   path = ~/src/clora/.gitconfig
