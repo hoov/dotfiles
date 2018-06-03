@@ -1,19 +1,19 @@
 if &shell =~# 'fish$'
-    set shell=/bin/bash
+  set shell=/bin/bash
 endif
 
-let $VIMPATH = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
+" Need to set leader before plugins
+let mapleader=","
 
-" Break out plugins so that we can insta
+let $VIMPATH = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+
 if filereadable(expand('$VIMPATH/plugins.vim'))
-	execute 'source' expand('$VIMPATH/plugins.vim')
+  execute 'source' expand('$VIMPATH/plugins.vim')
 endif
 
 " minpac helpers
 command! PackUpdate call minpac#update()
 command! PackClean call minpac#clean()
-
-let mapleader=","
 
 set cursorline
 
@@ -40,67 +40,6 @@ nmap <leader>l :set list!<CR>
 set showbreak=↪
 set fillchars=vert:│,fold:─
 set listchars=tab:▸\ ,eol:¬,trail:·,extends:⟫,precedes:⟪,nbsp:␣
-
-" Plugin configuration
-
-" Valloric/YouCompleteMe
-nnoremap <leader>jd :YcmCompleter GoTo<CR>
-
-" airblade/vim-gitgutter
-nmap <leader>g :GitGutterLineHighlightsToggle<CR>
-
-" jremmen/vim-ripgrep
-map <Leader>r <Esc>:Rg<CR>
-map <Leader>R <Esc>:Rg 
-let g:rg_highlight = 1
-
-" majutsushi/tagbar
-nmap <F8> :TagbarToggle<CR>
-
-" rizzatti/dash.vim
-nmap <silent> <leader>d <Plug>DashSearch
-
-" scrooloose/nerdtree
-nmap <leader>n :NERDTreeToggle<CR>
-nmap <leader>N :NERDTreeFind<CR>
-" If vim is opened without a file specified, open NERDTree
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
-" vim-airline/vim-airline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#ale#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
-nmap <leader>- <Plug>AirlineSelectPrevTab
-nmap <leader>+ <Plug>AirlineSelectNextTab
-
-" w0rp/ale
-let g:ale_open_list = 1
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
-
-" chriskempson/base16-vim
-let base16colorspace=256
-set background=dark
-colorscheme base16-default-dark
-
-" fzf
-nnoremap <Leader>o :Files<CR>
-
-let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=black
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=darkgrey
 
 " Filetypes
 
