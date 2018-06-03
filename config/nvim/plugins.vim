@@ -60,13 +60,13 @@ nmap <F8> :TagbarToggle<CR>
 nmap <silent> <leader>d <Plug>DashSearch
 
 " scrooloose/nerdtree
-"if exists("NERDTree")
+if exists("NERDTree")
   nmap <leader>n :NERDTreeToggle<CR>
   nmap <leader>N :NERDTreeFind<CR>
   " If vim is opened without a file specified, open NERDTree
   autocmd StdinReadPre * let s:std_in=1
   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-"endif
+endif
 
 " vim-airline/vim-airline
 let g:airline_powerline_fonts = 1
