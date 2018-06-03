@@ -1,3 +1,4 @@
+httpie ~= 0.9.9
 neovim ~= 0.2
 powerline-status ~= 2.6
 psutil ~= 5.4

@@ -1,12 +1,24 @@
 #!/bin/bash
 
 if [ ! -f ${HOME}/.gitconfig.local ]; then
+  # Okay, this doesn't really work with rcm at the moment, but we'll leave it be
   read -p "Name [Tom Hoover]: " USERNAME
   read -p "Email [my gmail]: " EMAIL
-  
+
   USERNAME=${USERNAME:-Tom Hoover}
   # Silly encoding so my email isn't scraped as easily
   DEFAULT=$(echo Z3ViYmlyZUB0em52eS5wYnoK | base64 --decode | tr 'A-Za-z' 'N-ZA-Mn-za-m')
   EMAIL=${EMAIL:-$DEFAULT}
   EMAIL=${EMAIL} USERNAME=${USERNAME} erb -v ../gitconfig.local.erb > ${HOME}/.gitconfig.local
 fi
+
+if [ ! -d ${HOME}/.config/nvim/pack/minpac/opt/minpac ]; then
+  git clone -q https://github.com/k-takata/minpac.git ${HOME}/.config/nvim/pack/minpac/opt/minpac
+fi
+
+vim -u ${HOME}/.config/nvim/plugins.vim --headless "+call minpac#update('', {'do': 'quit'})"
+
+# Not sure what is going on with lack of newlines after above command
+echo
+
+pip install -q --upgrade --requirement=../requirements.txt

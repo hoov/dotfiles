@@ -1,3 +1,4 @@
+config/configstore/update-notifier-npm.json
 config/fish/fish_history
 config/fish/fishd.*
 config/fish/generated_completions/
@@ -7,4 +8,4 @@ config/fisherman-plugins/conf.d/
 config/fisherman-plugins/functions/
 config/fisherman/
 config/htop/htoprc
-config/nvim/plugged/
+config/nvim/pack/

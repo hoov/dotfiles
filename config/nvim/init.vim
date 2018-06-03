@@ -2,55 +2,16 @@ if &shell =~# 'fish$'
     set shell=/bin/bash
 endif
 
-function! BuildYCM(info)
-  " info is a dictionary with 3 fields
-  " - name:   name of the plugin
-  " - status: 'installed', 'updated', or 'unchanged'
-  " - force:  set on PlugInstall! or PlugUpdate!
-  if a:info.status == 'installed' || a:info.force
-    !./install.py
-  endif
-endfunction
+let $VIMPATH = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 
-function! BuildTern(info)
-  if a:info.status == 'installed' || a:info.force
-    !npm install
-  endif
-endfunction
+" Break out plugins so that we can insta
+if filereadable(expand('$VIMPATH/plugins.vim'))
+	execute 'source' expand('$VIMPATH/plugins.vim')
+endif
 
-call plug#begin('~/.config/nvim/plugged')
-"Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-Plug 'airblade/vim-gitgutter'
-Plug 'dag/vim-fish'
-Plug 'docker/docker', { 'rtp': '/contrib/syntax/vim/' }
-Plug 'jmcantrell/vim-virtualenv'
-Plug 'jremmen/vim-ripgrep'
-Plug 'kchmck/vim-coffee-script'
-Plug 'kshenoy/vim-signature'
-Plug 'majutsushi/tagbar'
-Plug 'rizzatti/dash.vim'
-Plug 'rodjek/vim-puppet'
-Plug 'scrooloose/nerdtree'
-"Plug 'ternjs/tern_for_vim', { 'do': function('BuildTern') }
-Plug 'tpope/vim-bundler'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-projectionist'
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-rake'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-surround'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'w0rp/ale'
-Plug 'yggdroot/indentline'
-
-" Locally installed plugins
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
-
-" Themes
-Plug 'chriskempson/base16-vim'
-call plug#end()
+" minpac helpers
+command! PackUpdate call minpac#update()
+command! PackClean call minpac#clean()
 
 let mapleader=","
 
@@ -103,8 +64,8 @@ nmap <silent> <leader>d <Plug>DashSearch
 nmap <leader>n :NERDTreeToggle<CR>
 nmap <leader>N :NERDTreeFind<CR>
 " If vim is opened without a file specified, open NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " vim-airline/vim-airline
 let g:airline_powerline_fonts = 1
