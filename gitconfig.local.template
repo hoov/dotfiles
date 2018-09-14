@@ -1,0 +1,5 @@
+[core]
+  editor = ${EDITOR}
+[user]
+  name = ${USERNAME}
+  email = ${EMAIL}

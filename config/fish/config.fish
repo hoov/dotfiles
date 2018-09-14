@@ -82,3 +82,4 @@ if status --is-interactive
   type -q rbenv; and source (rbenv init -|psub)
   type -q nodenv; and source (nodenv init -|psub)
 end
+set -g fish_user_paths "/usr/local/opt/mysql@5.6/bin" $fish_user_paths

@@ -9,15 +9,15 @@ if [ ! -f ${HOME}/.gitconfig.local ]; then
   # Silly encoding so my email isn't scraped as easily
   DEFAULT=$(echo Z3ViYmlyZUB0em52eS5wYnoK | base64 --decode | tr 'A-Za-z' 'N-ZA-Mn-za-m')
   EMAIL=${EMAIL:-$DEFAULT}
-  EMAIL=${EMAIL} USERNAME=${USERNAME} erb -v ../gitconfig.local.erb > ${HOME}/.gitconfig.local
+  cat ../gitconfig.local.template  | EMAIL=${EMAIL} USERNAME=${USERNAME} /usr/local/opt/gettext/bin/envsubst > ${HOME}/.gitconfig.local
 fi
 
 if [ ! -d ${HOME}/.config/nvim/pack/minpac/opt/minpac ]; then
   git clone -q https://github.com/k-takata/minpac.git ${HOME}/.config/nvim/pack/minpac/opt/minpac
 fi
 
-vim -u ${HOME}/.config/nvim/plugins.vim --headless "+call minpac#update('', {'do': 'quit'})"
-
+nvim -u ${HOME}/.config/nvim/plugins.vim --headless "+packadd minpac" "+call minpac#update('', {'do': 'quitall'})"
+nvim -u NONE --headless "+helptags ALL" "+quit"
 # Not sure what is going on with lack of newlines after above command
 echo
 

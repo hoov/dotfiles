@@ -50,3 +50,6 @@
 
 [includeIf "gitdir:~/src/clora/"]
   path = ~/src/clora/.gitconfig
+
+[includeIf "gitdir:~/src/evisort/"]
+  path = ~/src/evisort/.gitconfig

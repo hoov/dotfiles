@@ -2,7 +2,7 @@ EXCLUDES=(
   Brewfile
   README.rdoc
   debian.sh
-  gitconfig.local.erb
+  gitconfig.local.template
   install.sh
   osx.sh
   requirements.txt)
