@@ -24,12 +24,8 @@ RCRC=rcrc rcup -d .
 defaults write com.apple.BezelServices dAuto -bool true
 sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor "Automatic Display Enabled" -bool true
 
-# Subpixel font rendering on non-Apple LCDs
-# 0 : Disabled
-# 1 : Minimal
-# 2 : Medium
-# 3 : Smoother
-# 4 : Strong
+# No more subpixel font rendering on Mojave, but we can disable smoothing at least
+defaults write -g CGFontRenderingFontSmoothingDisabled -bool FALSE
 defaults write NSGlobalDomain AppleFontSmoothing -int 1
 
 # Enable HiDPI display modes (requires restart)
