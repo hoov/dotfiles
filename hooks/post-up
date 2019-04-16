@@ -2,14 +2,14 @@
 
 if [ ! -f ${HOME}/.gitconfig.local ]; then
   # Okay, this doesn't really work with rcm at the moment, but we'll leave it be
-  read -p "Name [Tom Hoover]: " USERNAME
-  read -p "Email [my gmail]: " EMAIL
+  # read -p "Name [Tom Hoover]: " USERNAME
+  # read -p "Email [my gmail]: " EMAIL
 
   USERNAME=${USERNAME:-Tom Hoover}
   # Silly encoding so my email isn't scraped as easily
   DEFAULT=$(echo Z3ViYmlyZUB0em52eS5wYnoK | base64 --decode | tr 'A-Za-z' 'N-ZA-Mn-za-m')
   EMAIL=${EMAIL:-$DEFAULT}
-  cat ../gitconfig.local.template  | EMAIL=${EMAIL} USERNAME=${USERNAME} /usr/local/opt/gettext/bin/envsubst > ${HOME}/.gitconfig.local
+  cat ../gitconfig.local.template  | EMAIL=${EMAIL} USERNAME=${USERNAME} envsubst > ${HOME}/.gitconfig.local
 fi
 
 if [ ! -d ${HOME}/.config/nvim/pack/minpac/opt/minpac ]; then
@@ -17,8 +17,10 @@ if [ ! -d ${HOME}/.config/nvim/pack/minpac/opt/minpac ]; then
 fi
 
 nvim -u ${HOME}/.config/nvim/plugins.vim --headless "+packadd minpac" "+call minpac#update('', {'do': 'quitall'})"
-nvim -u NONE --headless "+helptags ALL" "+quit"
-# Not sure what is going on with lack of newlines after above command
-echo
 
-pip install -q --upgrade --requirement=../requirements.txt
+# Silence output since I don't care if we don't re-write the standard tags. I could specify the minpac directory
+# directly, but I might switch package managers in the future.
+nvim -u NONE --headless "+helptags ALL" "+quit" 2> /dev/null
+
+export PYTHONWARNINGS="ignore:DEPRECATION"
+pip install --user -q --upgrade --no-warn-script-location --requirement=../requirements.txt

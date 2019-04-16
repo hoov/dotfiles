@@ -1,7 +1,5 @@
 #!/bin/bash
 
-RCRC=rcrc rcup -v
-
 case $(uname -s) in
   Darwin)
     ./osx.sh

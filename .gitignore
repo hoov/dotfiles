@@ -9,3 +9,5 @@ config/fisherman-plugins/functions/
 config/fisherman/
 config/htop/htoprc
 config/nvim/pack/
+config/fish/fish_variables
+config/nvim/.netrwhist

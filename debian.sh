@@ -31,12 +31,18 @@ update_and_install() {
 sudo -v
 
 pkgs=(cmake
+      curl
+      gettext-base
       gperf
       jq
       libfreetype6-dev
       libfontconfig1-dev
       libx11-xcb1
       pkg-config
+      python
+      python-dev
+      python3
+      python3-dev
       xclip)
 
 for pkg in "${pkgs[@]}"
@@ -53,6 +59,13 @@ if ! apt_installed rcm; then
   echo "deb http://apt.thoughtbot.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/thoughtbot.list
   update_and_install rcm
 fi
+
+# RCM is handling python dependencies
+echo "Syncing dotfiles"
+rcup -d .
+
+# We haven't switched shells yet, so let's modify the path to include Python binaries that just got installed
+export PATH=${HOME}/.local/bin:${PATH}
 
 if [ ! -x ${CARGO_BIN} ]; then
   echo "Installing cargo..."
