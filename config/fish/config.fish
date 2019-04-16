@@ -14,8 +14,8 @@ set __fish_git_prompt_color_branch '5FD7FF'
 # We'll take care of it ourselves...
 set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 
-# Prefer /usr/local/bin
-set PATH /usr/local/bin $PATH
+# Prefer /usr/local/bin and /usr/local/sbin
+set PATH /usr/local/bin /usr/local/sbin $PATH
 
 # And prefer the path in .local evn more
 if test -e $HOME/.local/bin
@@ -33,7 +33,7 @@ function __add_gnubin
   end
 end
 
-switch (uname)
+switch uname
     case Darwin
         set -x JAVA_HOME (/usr/libexec/java_home)
         # If coretuils is installed, prefer those
