@@ -15,6 +15,7 @@ call minpac#add('k-takata/minpac', {'type': 'opt'})
 
 call minpac#add('airblade/vim-gitgutter')
 call minpac#add('chr4/nginx.vim')
+" This is super old, but the one most commonly used
 call minpac#add('dag/vim-fish')
 call minpac#add('hashivim/vim-terraform')
 call minpac#add('jmcantrell/vim-virtualenv')

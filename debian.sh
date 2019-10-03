@@ -33,6 +33,7 @@ sudo -v
 # This has been tested with Debian *buster* on WSL
 pkgs=(cmake
       apt-transport-https
+      aspell
       ca-certificates
       curl
       fish
@@ -47,6 +48,7 @@ pkgs=(cmake
       libxcursor1
       libxi6
       libxrandr2
+      locate
       lsb-release
       lsof
       man-db
@@ -65,6 +67,7 @@ pkgs=(cmake
       software-properties-common
       tmux
       tree
+      wamerican-large
       wget
       xclip)
 
@@ -122,6 +125,7 @@ function install_latest_hub() {
   HUB_DIR_NAME=${HUB_URL##*/}
   HUB_DIR_NAME=${HUB_DIR_NAME%.*}
   prefix=${HOME}/.local ${SCRATCH}/${HUB_DIR_NAME}/install
+  sudo cp ${SCRATCH}/${HUB_DIR_NAME}/etc/hub.fish_completion /usr/share/fish/vendor_completions.d/hub.fish
 }
 
 if ! bin_installed hub; then
