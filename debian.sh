@@ -30,19 +30,26 @@ update_and_install() {
 
 sudo -v
 
+# This assumes that we're on debian *unstable/sid*
 pkgs=(cmake
+      apt-transport-https
+      ca-certificates
       curl
       gettext-base
+      gnupg2
       gperf
       jq
-      libfreetype6-dev
       libfontconfig1-dev
+      libfreetype6-dev
       libx11-xcb1
       pkg-config
       python
       python-dev
       python3
       python3-dev
+      software-properties-common
+      tree
+      tmux
       xclip)
 
 for pkg in "${pkgs[@]}"
@@ -106,6 +113,27 @@ else
 
     install_latest_hub
   fi
+fi
+
+if ! bin_installed docker; then
+  echo "Installing docker"
+  sudo curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+  # We can't use `lsb_release -cs` here since we're on sid.
+  # FIXME: Don't hardcode `stretch` somehow
+  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"
+  sudo apt-get -qq update
+  sudo apt-get -qq install docker-ce docker-ce-cli containerd.io
+fi
+
+DOCKER_COMPOSE_RELEASE_URL=https://api.github.com/repos/docker/compose/releases/latest
+LATEST_DOCKER_COMPOSE_VERSION=$(http ${DOCKER_COMPOSE_RELEASE_URL} | jq -r .tag_name)
+
+# FIXME: We should abstract this to a function and upgrade like we do with DSF
+if ! bin_installed docker-compose; then
+  echo "Installing docker-compose (${LATEST_DOCKER_COMPOSE_VERSION})..."
+  curl -sL https://github.com/docker/compose/releases/download/${LATEST_DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o ${HOME}/.local/bin/docker-compose
+  chmod +x ${HOME}/.local/bin/docker-compose
 fi
 
 DSF_RELEASE_URL=https://api.github.com/repos/so-fancy/diff-so-fancy/releases/latest

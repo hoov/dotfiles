@@ -57,6 +57,11 @@ else
   set -gx EDITOR vim
 end
 
+# WSL specific stuff here
+if count (uname -r | grep Microsoft) > /dev/null
+  set -gx DOCKER_HOST tcp://localhost:2375
+end
+
 for file in $HOME/.config/fish/local.d/*.fish
   builtin source $file ^ /dev/null
 end
