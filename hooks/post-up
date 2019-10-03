@@ -9,6 +9,7 @@ if [ ! -f ${HOME}/.gitconfig.local ]; then
   # Silly encoding so my email isn't scraped as easily
   DEFAULT=$(echo Z3ViYmlyZUB0em52eS5wYnoK | base64 --decode | tr 'A-Za-z' 'N-ZA-Mn-za-m')
   EMAIL=${EMAIL:-$DEFAULT}
+  EDITOR=${EDITOR:-vim}
   cat ../gitconfig.local.template  | EMAIL=${EMAIL} USERNAME=${USERNAME} envsubst > ${HOME}/.gitconfig.local
 fi
 

@@ -30,11 +30,12 @@ update_and_install() {
 
 sudo -v
 
-# This assumes that we're on debian *unstable/sid*
+# This has been tested with Debian *buster* on WSL
 pkgs=(cmake
       apt-transport-https
       ca-certificates
       curl
+      fish
       gettext-base
       gnupg2
       gperf
@@ -42,14 +43,26 @@ pkgs=(cmake
       libfontconfig1-dev
       libfreetype6-dev
       libx11-xcb1
+      libxcb-xfixes0-dev
+      libxcursor1
+      libxi6
+      libxrandr2
+      lsb-release
+      man-db
+      neovim
       pkg-config
       python
       python-dev
+      python-neovim
+      python-pip
       python3
       python3-dev
+      python3-neovim
+      python3-pip
       software-properties-common
       tree
       tmux
+      wget
       xclip)
 
 for pkg in "${pkgs[@]}"
@@ -85,10 +98,16 @@ if ! cargo_installed ripgrep; then
   ${CARGO_BIN} install -fq ripgrep
 fi
 
-if ! cargo_installed alacritty; then
-  echo "Installing alacritty..."
-  ${CARGO_BIN} install -fq --git https://github.com/jwilm/alacritty
+if ! cargo_installed cargo-deb; then
+  echo "Installing cargo-deb..."
+  ${CARGO_BIN} install -fq cargo-deb
 fi
+
+# alacritty doesn't install from git anymore
+#  if ! cargo_installed alacritty; then
+#   echo "Installing alacritty..."
+#   ${CARGO_BIN} install -fq --git https://github.com/jwilm/alacritty
+# fi
 
 HUB_RELEASE_URL=https://api.github.com/repos/github/hub/releases/latest
 LATEST_HUB_VERSION=$(http ${HUB_RELEASE_URL} | jq -r .tag_name)
@@ -119,9 +138,7 @@ if ! bin_installed docker; then
   echo "Installing docker"
   sudo curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 
-  # We can't use `lsb_release -cs` here since we're on sid.
-  # FIXME: Don't hardcode `stretch` somehow
-  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"
+  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian ${VERSION_CODENAME} stable"
   sudo apt-get -qq update
   sudo apt-get -qq install docker-ce docker-ce-cli containerd.io
 fi
