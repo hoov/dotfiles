@@ -48,9 +48,12 @@ pkgs=(cmake
       libxi6
       libxrandr2
       lsb-release
+      lsof
       man-db
       neovim
+      net-tools
       pkg-config
+      psmisc
       python
       python-dev
       python-neovim
@@ -60,8 +63,8 @@ pkgs=(cmake
       python3-neovim
       python3-pip
       software-properties-common
-      tree
       tmux
+      tree
       wget
       xclip)
 
@@ -132,6 +135,11 @@ else
 
     install_latest_hub
   fi
+fi
+
+# Docker is lacking support for iptables with nf_tables backend
+if [ "buster" == "${VERSION_CODENAME}" ]; then
+  sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
 fi
 
 if ! bin_installed docker; then
