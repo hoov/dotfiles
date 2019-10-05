@@ -25,6 +25,7 @@ call minpac#add('kshenoy/vim-signature')
 call minpac#add('majutsushi/tagbar')
 call minpac#add('rizzatti/dash.vim')
 call minpac#add('rodjek/vim-puppet')
+call minpac#add('rust-lang/rust.vim')
 call minpac#add('saltstack/salt-vim')
 call minpac#add('scrooloose/nerdtree')
 call minpac#add('tpope/vim-bundler')
@@ -33,7 +34,7 @@ call minpac#add('tpope/vim-projectionist')
 call minpac#add('tpope/vim-rails')
 call minpac#add('tpope/vim-rake')
 call minpac#add('tpope/vim-repeat')
-call minpac#add('tpope/vim-surround')
+cal minpac#add('tpope/vim-surround')
 "call minpac#add('tpope/vim-vinegar')
 call minpac#add('vim-airline/vim-airline')
 call minpac#add('vim-airline/vim-airline-themes')
@@ -80,7 +81,7 @@ let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#whitespace#enabled = 1
 nmap <leader>1 <Plug>AirlineSelectTab1
 nmap <leader>2 <Plug>AirlineSelectTab2
 nmap <leader>3 <Plug>AirlineSelectTab3

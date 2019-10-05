@@ -1,3 +1,4 @@
+black ~= 19.3b0
 httpie ~= 1.0.2
 neovim ~= 0.3.1
 powerline-status ~= 2.6

@@ -1,0 +1,8 @@
+#include ".config/base16-xresources/xresources/base16-solarized-dark-256.Xresources"
+
+!! urxvt
+URxvt*scrollBar: false
+URxvt*letterSpace: true
+
+URxvt*font: xft:PragmataPro Mono Liga:style=Regular:pixelsize=14:antialias=true
+URxvt*boldFont: xft:PragmataPro Mono Liga:style=Bold:pixelsize=14:antialias=true

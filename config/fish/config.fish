@@ -58,8 +58,8 @@ else
 end
 
 # WSL specific stuff here
-if count (uname -r | grep Microsoft) > /dev/null
-  set -gx DOCKER_HOST tcp://localhost:2375
+if grep -q microsoft /proc/version
+  set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 end
 
 for file in $HOME/.config/fish/local.d/*.fish
