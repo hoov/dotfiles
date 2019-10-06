@@ -62,8 +62,12 @@ pkgs=(cmake
       imagemagick
       jq
       kitty
+      libbz2-dev
+      libffi-dev
       libfontconfig1-dev
       libfreetype6-dev
+      libreadline-dev
+      libssl-dev
       libx11-xcb1
       libxcb-xfixes0-dev
       libxcursor1

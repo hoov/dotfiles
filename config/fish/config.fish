@@ -29,6 +29,11 @@ if test -e $HOME/.cargo/bin
   set PATH $HOME/.cargo/bin $PATH
 end
 
+# pyenv
+if test -e {$HOME}/.pyenv/bin
+  set PATH {$HOME}/.pyenv/bin $PATH
+end
+
 function __add_gnubin
   if test -e /usr/local/opt/$argv[1]/libexec/gnubin
     set PATH /usr/local/opt/$argv[1]/libexec/gnubin $PATH
@@ -90,5 +95,5 @@ if status --is-interactive
 
   command -sq rbenv; and source (rbenv init -|psub)
   command -sq nodenv; and source (nodenv init -|psub)
+  test -e {$HOME}/.asdf/asdf.fish; and source {$HOME}/.asdf/asdf.fish
 end
-set -g fish_user_paths "/usr/local/opt/mysql@5.6/bin" $fish_user_paths

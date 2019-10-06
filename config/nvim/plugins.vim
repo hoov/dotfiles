@@ -8,6 +8,7 @@ call minpac#init()
 " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
 call minpac#add('k-takata/minpac', {'type': 'opt'})
 call minpac#add('airblade/vim-gitgutter')
+call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
 " This is super old, but the one most commonly used
 call minpac#add('dag/vim-fish')
