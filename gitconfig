@@ -31,7 +31,12 @@
   colorMoved = zebra
   compactionHeuristic = true
   mnemonicprefix = true
-  tool = araxis
+  tool = kitty
+[difftool]
+  prompt = false
+  trustExitCode = true
+[difftool "kitty"]
+  cmd = kitty +kitten diff $LOCAL $REMOTE
 [fetch]
   prune = true
   pruneTags = true

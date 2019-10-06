@@ -1,5 +1,10 @@
-black ~= 19.3b0
+black ~= 19.3b0; python_version > '2.7'
 httpie ~= 1.0.2
-neovim ~= 0.3.1
+ipython ~= 5.8.0; python_version <= '2.7'
+ipython ~= 7.8.0; python_version > '2.7'
+jedi ~= 0.15.1
+pynvim ~= 0.3.2
 powerline-status ~= 2.6
 psutil ~= 5.4
+pygments ~= 2.4
+pygments-solarized ~= 0.0.3

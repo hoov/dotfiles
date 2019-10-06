@@ -24,5 +24,6 @@ nvim -u ${HOME}/.config/nvim/plugins.vim --headless "+packadd minpac" "+call min
 nvim -u NONE --headless "+helptags ALL" "+quit" 2> /dev/null
 
 export PYTHONWARNINGS="ignore:DEPRECATION"
-# We're going to default to Python 3 now
+# Install python2 stuff first, and then clobber binaries with python3
+pip2 install --user -q --upgrade --no-warn-script-location --requirement=../requirements.txt
 pip3 install --user -q --upgrade --no-warn-script-location --requirement=../requirements.txt

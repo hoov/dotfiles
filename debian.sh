@@ -55,11 +55,13 @@ pkgs=(cmake
       fish
       fontconfig
       fonts-powerline
+      fzf
       gettext-base
       gnupg2
       gperf
       imagemagick
       jq
+      kitty
       libfontconfig1-dev
       libfreetype6-dev
       libx11-xcb1
@@ -70,6 +72,7 @@ pkgs=(cmake
       locate
       lsb-release
       lsof
+      lua-nvim
       man-db
       ncurses-term
       neovim
@@ -84,6 +87,7 @@ pkgs=(cmake
       python3-dev
       python3-neovim
       python3-pip
+      ruby-neovim
       software-properties-common
       strace
       telnet

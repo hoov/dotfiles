@@ -1,3 +1,5 @@
+set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+
 set fish_color_user 'AF5FFF'
 set fish_color_host 'FF6600'
 set fish_color_cwd '00FF00'
@@ -37,7 +39,7 @@ switch uname
     case Darwin
         set -x JAVA_HOME (/usr/libexec/java_home)
         # If coretuils is installed, prefer those
-        if type -q brew
+        if command -sq brew
             for pkg in coreutils findutils gnu-sed
                 __add_gnubin $pkg
             end
@@ -47,11 +49,11 @@ switch uname
         set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
 end
 
-if type -q powerline-daemon
+if command -sq powerline-daemon
     set -gx POWERLINE_HOME (pip show powerline-status 2>/dev/null | grep Location | cut -f2 -d" ")
 end
 
-if type -q nvim
+if command -sq nvim
   set -gx EDITOR nvim
 else
   set -gx EDITOR vim
@@ -62,29 +64,31 @@ if grep -q microsoft /proc/version
   set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 end
 
-for file in $HOME/.config/fish/local.d/*.fish
+for file in $XDG_CONFIG_HOME/fish/local.d/*.fish
   builtin source $file ^ /dev/null
 end
 
-for file in $fish_path/conf.d/*.fish
-  builtin source $file ^ /dev/null
+# Fisherman
+set -g fisher_path $XDG_CONFIG_HOME/fisherman-plugins
+
+# Bootstrap fisherman if it doesn't exist
+if not functions -q fisher
+    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
+    fish -c fisher
 end
 
-# Fisherman stuff
-set -U fish_path $HOME/.config/fisherman-plugins
+set fish_function_path $fish_function_path[1] $fisher_path/functions $fish_function_path[2..-1]
+set fish_complete_path $fish_complete_path[1] $fisher_path/completions $fish_complete_path[2..-1]
 
-for file in $fish_path/conf.d/*.fish
-  builtin source $file ^ /dev/null
+for file in $fisher_path/conf.d/*.fish
+    builtin source $file 2> /dev/null
 end
-
-set fish_function_path $fish_path/functions $fish_function_path
-set fish_complete_path $fish_path/completions $fish_complete_path
 
 if status --is-interactive
   source $HOME/.config/base16-shell/profile_helper.fish
-  eval sh $HOME/.config/base16-shell/scripts/base16-solarized-dark.sh
+  base16-solarized-dark
 
-  type -q rbenv; and source (rbenv init -|psub)
-  type -q nodenv; and source (nodenv init -|psub)
+  command -sq rbenv; and source (rbenv init -|psub)
+  command -sq nodenv; and source (nodenv init -|psub)
 end
 set -g fish_user_paths "/usr/local/opt/mysql@5.6/bin" $fish_user_paths
