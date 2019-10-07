@@ -16,44 +16,48 @@ set __fish_git_prompt_color_branch '5FD7FF'
 # We'll take care of it ourselves...
 set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 
+# And now clobber with starship if we have it
+if command -sq starship
+    eval (starship init fish)
+end
 # Prefer /usr/local/bin and /usr/local/sbin
 set PATH /usr/local/bin /usr/local/sbin $PATH
 
 # And prefer the path in .local evn more
 if test -e $HOME/.local/bin
-  set PATH {$HOME}/.local/bin $PATH
+    set PATH {$HOME}/.local/bin $PATH
 end
 
 # Rust
 if test -e $HOME/.cargo/bin
-  set PATH $HOME/.cargo/bin $PATH
+    set PATH $HOME/.cargo/bin $PATH
 end
 
 # pyenv
 if test -e {$HOME}/.pyenv/bin
-  set PATH {$HOME}/.pyenv/bin $PATH
+    set PATH {$HOME}/.pyenv/bin $PATH
 end
 
 function __add_gnubin
-  if test -e /usr/local/opt/$argv[1]/libexec/gnubin
-    set PATH /usr/local/opt/$argv[1]/libexec/gnubin $PATH
+    if test -e /usr/local/opt/$argv[1]/libexec/gnubin
+        set PATH /usr/local/opt/$argv[1]/libexec/gnubin $PATH
   end
 end
 
 set fish_complete_path $fish_complete_path[1] {$HOME}/.asdf/completions $fish_complete_path[2..-1]
 
 switch uname
-    case Darwin
-        set -x JAVA_HOME (/usr/libexec/java_home)
-        # If coretuils is installed, prefer those
-        if command -sq brew
-            for pkg in coreutils findutils gnu-sed
-                __add_gnubin $pkg
-            end
+case Darwin
+    set -x JAVA_HOME (/usr/libexec/java_home)
+    # If coretuils is installed, prefer those
+    if command -sq brew
+        for pkg in coreutils findutils gnu-sed
+            __add_gnubin $pkg
         end
-        test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
-    case Linux
-        set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
+    end
+    test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+case Linux
+    set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
 end
 
 if command -sq powerline-daemon
@@ -61,18 +65,18 @@ if command -sq powerline-daemon
 end
 
 if command -sq nvim
-  set -gx EDITOR nvim
+    set -gx EDITOR nvim
 else
-  set -gx EDITOR vim
+    set -gx EDITOR vim
 end
 
 # WSL specific stuff here
 if grep -q microsoft /proc/version
-  set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
+    set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 end
 
 for file in $XDG_CONFIG_HOME/fish/local.d/*.fish
-  builtin source $file ^ /dev/null
+    builtin source $file ^ /dev/null
 end
 
 # Fisherman
@@ -109,10 +113,10 @@ else
 end
 
 if status --is-interactive
-  source $HOME/.config/base16-shell/profile_helper.fish
-  base16-solarized-dark
+    source $HOME/.config/base16-shell/profile_helper.fish
+    base16-solarized-dark
 
-  command -sq rbenv; and source (rbenv init -|psub)
-  command -sq nodenv; and source (nodenv init -|psub)
-  test -e {$HOME}/.asdf/asdf.fish; and source {$HOME}/.asdf/asdf.fish
+    command -sq rbenv; and source (rbenv init -|psub)
+    command -sq nodenv; and source (nodenv init -|psub)
+    test -e {$HOME}/.asdf/asdf.fish; and source {$HOME}/.asdf/asdf.fish
 end

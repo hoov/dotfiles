@@ -1,0 +1,8 @@
+[hostname]
+ssh_only = false
+
+[python]
+pyenv_version_name = false
+
+[username]
+show_always = true
