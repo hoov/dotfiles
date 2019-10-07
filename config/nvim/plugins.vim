@@ -12,6 +12,7 @@ call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
 " This is super old, but the one most commonly used
 call minpac#add('dag/vim-fish')
+call minpac#add('dense-analysis/ale')
 call minpac#add('hashivim/vim-terraform')
 call minpac#add('jremmen/vim-ripgrep')
 call minpac#add('junegunn/fzf')
@@ -32,7 +33,6 @@ call minpac#add('tpope/vim-repeat')
 call minpac#add('tpope/vim-surround')
 call minpac#add('vim-airline/vim-airline')
 call minpac#add('vim-airline/vim-airline-themes')
-call minpac#add('w0rp/ale')
 call minpac#add('yggdroot/indentline')
 
 " Autocomplete
@@ -60,6 +60,12 @@ command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 
 " airblade/vim-gitgutter
 nmap <leader>g :GitGutterLineHighlightsToggle<CR>
+
+" dense-analysis/ale
+let g:ale_open_list = 1
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+let g:ale_linters = { 'javascript': ['standard'], }
 
 " hashivim/vim-terraform
 let g:terraform_fmt_on_save=1
@@ -107,12 +113,6 @@ nmap <leader>+ <Plug>AirlineSelectNextTab
 " vim-airline/vim-airline-themes
 let g:airline_theme='base16_vim'
 let g:airline_base16_solarized=1
-
-" w0rp/ale
-let g:ale_open_list = 1
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
-let g:ale_linters = { 'javascript': ['standard'], }
 
 " yggdroot/indentline
 let g:indentLine_char = '¦'

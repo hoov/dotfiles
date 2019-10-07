@@ -8,3 +8,5 @@ powerline-status ~= 2.6
 psutil ~= 5.4
 pygments ~= 2.4
 pygments-base16 ~= 1.0.3
+Sphinx ~= 1.8.5; python_version <= '2.7'
+Sphinx ~= 2.2.0; python_version > '2.7'

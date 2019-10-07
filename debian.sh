@@ -9,13 +9,18 @@ DEBIAN_FRONTEND=noninteractive
 SCRATCH=$(mktemp -d -t tmp.XXXXXXXXXX)
 
 function finish() {
-  rm -rf "${SCRATCH}"
+  true
+  #rm -rf "${SCRATCH}"
 }
 
 trap finish EXIT
 
 info() {
   echo "[INFO] ${1}"
+}
+
+error() {
+  echo "[ERROR] ${1}"
 }
 
 apt_installed() {
@@ -40,6 +45,13 @@ get_github_latest_release() {
   http "https://api.github.com/repos/${1}/releases/latest" | jq -r .tag_name
 }
 
+get_github_latest_release_info() {
+  local -n __release_info=$1
+  local -r query="(.tag_name + \" \" + (.assets[] | select(.label | test(\"${3}\"; \"ix\")) | (.browser_download_url + \" \" + .content_type)))"
+  # shellcheck disable=SC2034
+  read -ra __release_info <<< "$(http "https://api.github.com/repos/${2}/releases/latest" | jq -r "${query}")"
+}
+
 get_github_download_url() {
   http "https://api.github.com/repos/${1}/releases/latest" | \
     jq -r ".assets[] | select(.name | test(\"${2}\")) | .browser_download_url"
@@ -52,6 +64,7 @@ install_system_packages() {
   local -a packages
   packages=(cmake
         apt-transport-https
+        asciidoc
         aspell
         ca-certificates
         curl
@@ -64,19 +77,27 @@ install_system_packages() {
         gperf
         imagemagick
         jq
-        kitty
         libbz2-dev
+        libcanberra-dev
+        libclang1
+        libdbus-1-dev
         libffi-dev
         libfontconfig1-dev
         libfreetype6-dev
+        libgl1-mesa-dev
         libreadline-dev
         libssl-dev
         libsqlite3-dev
+        libwayland-dev
         libx11-xcb1
         libxcb-xfixes0-dev
-        libxcursor1
-        libxi6
-        libxrandr2
+        libxcursor-dev
+        libxi-dev
+        libxinerama-dev
+        libxkbcommon-dev
+        libxkbcommon-x11-dev
+        libxrandr-dev
+        llvm
         locate
         lsb-release
         lsof
@@ -104,6 +125,7 @@ install_system_packages() {
         tree
         universal-ctags
         wamerican-large
+        wayland-protocols
         wget
         x11-xserver-utils
         x11-utils
@@ -156,7 +178,8 @@ install_cargo() {
 
 install_cargo_packages() {
   local -a packages
-  packages=(cargo-deb \
+  packages=(bat \
+            cargo-deb \
             ripgrep \
             starship \
             # alacritty doesn't install from git anymore
@@ -197,6 +220,37 @@ install_latest_hub() {
   sudo cp "${SCRATCH}/${hub_dir_name}/etc/hub.fish_completion" /usr/share/fish/vendor_completions.d/hub.fish
 }
 
+install_kitty() {
+  local -a release_info
+  get_github_latest_release_info release_info "kovidgoyal/kitty" "source"
+
+  if bin_installed kitty; then
+    local -r kitty_version=v$(kitty --version | cut -d" " -f2)
+  fi
+
+  if ! bin_installed kitty || [ "${kitty_version}" != "${release_info[0]}" ]; then
+
+    if [[ ! -z ${kitty_version} ]]; then
+      info "Installing kitty (${kitty_version} -> ${release_info[0]})..."
+    else
+      info "Installing kitty (${release_info[0]})..."
+    fi
+    wget -qO - "${release_info[1]}" | tar -Jx -C "${SCRATCH}"
+
+    local kitty_dir_name=${release_info[1]##*/}
+    kitty_dir_name="${SCRATCH}/${kitty_dir_name%.*.*}"
+    if ! pushd "${kitty_dir_name}" >/dev/null 2>&1; then
+      error "Error installing kitty"
+      return 1
+    fi
+    python3 setup.py linux-package > /dev/null
+    cp -ar "${kitty_dir_name}/linux-package/"* "${HOME}/.local"
+    popd >/dev/null 2>&1 || return 1
+  else
+    info "Kitty up to date (${kitty_version})"
+  fi
+}
+
 install_system_packages
 install_rcm
 disable_indexing_windows_drives
@@ -204,6 +258,7 @@ sync_dotfiles
 install_cargo
 install_cargo_packages
 install_latest_hub
+install_kitty
 
 # Docker is lacking support for iptables with nf_tables backend
 if [ "buster" == "${VERSION_CODENAME}" ]; then

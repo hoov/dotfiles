@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -f ${HOME}/.gitconfig.local ]; then
+if [ ! -f "${HOME}/.gitconfig.local" ]; then
   # Okay, this doesn't really work with rcm at the moment, but we'll leave it be
   # read -p "Name [Tom Hoover]: " USERNAME
   # read -p "Email [my gmail]: " EMAIL
@@ -10,14 +10,14 @@ if [ ! -f ${HOME}/.gitconfig.local ]; then
   DEFAULT=$(echo Z3ViYmlyZUB0em52eS5wYnoK | base64 --decode | tr 'A-Za-z' 'N-ZA-Mn-za-m')
   EMAIL=${EMAIL:-$DEFAULT}
   EDITOR=${EDITOR:-vim}
-  cat ../gitconfig.local.template  | EMAIL=${EMAIL} USERNAME=${USERNAME} envsubst > ${HOME}/.gitconfig.local
+  EMAIL=${EMAIL} USERNAME=${USERNAME} envsubst < ../gitconfig.local.template > "${HOME}/.gitconfig.local"
 fi
 
-if [ ! -d ${HOME}/.config/nvim/pack/minpac/opt/minpac ]; then
-  git clone -q https://github.com/k-takata/minpac.git ${HOME}/.config/nvim/pack/minpac/opt/minpac
+if [ ! -d "${HOME}/.config/nvim/pack/minpac/opt/minpac" ]; then
+  git clone -q https://github.com/k-takata/minpac.git "${HOME}/.config/nvim/pack/minpac/opt/minpac"
 fi
 
-nvim -u ${HOME}/.config/nvim/plugins.vim --headless "+packadd minpac" "+call minpac#update('', {'do': 'quitall'})"
+nvim -u "${HOME}/.config/nvim/plugins.vim" --headless "+packadd minpac" "+call minpac#update('', {'do': 'quitall'})" > /dev/null
 
 # Silence output since I don't care if we don't re-write the standard tags. I could specify the minpac directory
 # directly, but I might switch package managers in the future.
@@ -29,5 +29,6 @@ pip2 install --user -q --upgrade --no-warn-script-location --requirement=../defa
 pip3 install --user -q --upgrade --no-warn-script-location --requirement=../default-python-packages
 
 # Set up asdf
-source $HOME/.asdf/asdf.sh
+# shellcheck disable=SC1090
+source "$HOME/.asdf/asdf.sh"
 asdf plugin-add python 2> /dev/null

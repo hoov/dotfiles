@@ -78,7 +78,7 @@ augroup END
 augroup filetype_fish
   autocmd!
   autocmd FileType fish compiler fish
-  autocmd FileTYpe fish setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4 foldmethod=expr
+  autocmd FileType fish setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4 foldmethod=expr
 augroup END
 
 " Commit messages
