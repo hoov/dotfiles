@@ -25,5 +25,9 @@ nvim -u NONE --headless "+helptags ALL" "+quit" 2> /dev/null
 
 export PYTHONWARNINGS="ignore:DEPRECATION"
 # Install python2 stuff first, and then clobber binaries with python3
-pip2 install --user -q --upgrade --no-warn-script-location --requirement=../requirements.txt
-pip3 install --user -q --upgrade --no-warn-script-location --requirement=../requirements.txt
+pip2 install --user -q --upgrade --no-warn-script-location --requirement=../default-python-packages
+pip3 install --user -q --upgrade --no-warn-script-location --requirement=../default-python-packages
+
+# Set up asdf
+source $HOME/.asdf/asdf.sh
+asdf plugin-add python 2> /dev/null

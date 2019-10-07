@@ -7,4 +7,4 @@ pynvim ~= 0.3.2
 powerline-status ~= 2.6
 psutil ~= 5.4
 pygments ~= 2.4
-pygments-solarized ~= 0.0.3
+pygments-base16 ~= 1.0.3

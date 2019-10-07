@@ -40,6 +40,8 @@ function __add_gnubin
   end
 end
 
+set fish_complete_path $fish_complete_path[1] {$HOME}/.asdf/completions $fish_complete_path[2..-1]
+
 switch uname
     case Darwin
         set -x JAVA_HOME (/usr/libexec/java_home)
