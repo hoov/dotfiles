@@ -33,11 +33,6 @@ if test -e $HOME/.cargo/bin
     set PATH $HOME/.cargo/bin $PATH
 end
 
-# pyenv
-if test -e {$HOME}/.pyenv/bin
-    set PATH {$HOME}/.pyenv/bin $PATH
-end
-
 function __add_gnubin
     if test -e /usr/local/opt/$argv[1]/libexec/gnubin
         set PATH /usr/local/opt/$argv[1]/libexec/gnubin $PATH
@@ -46,7 +41,7 @@ end
 
 set fish_complete_path $fish_complete_path[1] {$HOME}/.asdf/completions $fish_complete_path[2..-1]
 
-switch uname
+switch (uname)
 case Darwin
     set -x JAVA_HOME (/usr/libexec/java_home)
     # If coretuils is installed, prefer those
@@ -64,18 +59,8 @@ if command -sq powerline-daemon
     set -gx POWERLINE_HOME (pip show powerline-status 2>/dev/null | grep Location | cut -f2 -d" ")
 end
 
-if command -sq nvim.appimage
-    set -gx EDITOR nvim.appimage
-    alias vim=nvim.appimage
-else if command -sq nvim
-    set -gx EDITOR nvim
-    alias vim=nvim
-else
-    set -gx EDITOR vim
-end
-
 # WSL specific stuff here
-if grep -q microsoft /proc/version
+if test -e /proc/version; and grep -q microsoft /proc/version
     set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 end
 
@@ -114,6 +99,19 @@ if command -sq bat
     set -U FZF_PREVIEW_FILE_CMD fzf_preview
 else
     set -e FZF_PREVIEW_FILE_CMD
+end
+
+# Aliases
+alias lla="ls -lha"
+
+if command -sq nvim.appimage
+    set -gx EDITOR nvim.appimage
+    alias vim=nvim.appimage
+else if command -sq nvim
+    set -gx EDITOR nvim
+    alias vim=nvim
+else
+    set -gx EDITOR vim
 end
 
 if status --is-interactive
