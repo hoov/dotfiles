@@ -64,8 +64,12 @@ if command -sq powerline-daemon
     set -gx POWERLINE_HOME (pip show powerline-status 2>/dev/null | grep Location | cut -f2 -d" ")
 end
 
-if command -sq nvim
+if command -sq nvim.appimage
+    set -gx EDITOR nvim.appimage
+    alias vim=nvim.appimage
+else if command -sq nvim
     set -gx EDITOR nvim
+    alias vim=nvim
 else
     set -gx EDITOR vim
 end

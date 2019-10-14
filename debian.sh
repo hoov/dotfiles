@@ -9,8 +9,7 @@ DEBIAN_FRONTEND=noninteractive
 SCRATCH=$(mktemp -d -t tmp.XXXXXXXXXX)
 
 function finish() {
-  true
-  #rm -rf "${SCRATCH}"
+  rm -rf "${SCRATCH}"
 }
 
 trap finish EXIT
@@ -47,7 +46,8 @@ get_github_latest_release() {
 
 get_github_latest_release_info() {
   local -n __release_info=$1
-  local -r query="(.tag_name + \" \" + (.assets[] | select(.label | test(\"${3}\"; \"ix\")) | (.browser_download_url + \" \" + .content_type)))"
+  local -r field=${4:-label}
+  local -r query="(.tag_name + \" \" + (.assets[] | select(.${field} | test(\"${3}\"; \"ix\")) | (.browser_download_url + \" \" + .content_type)))"
   # shellcheck disable=SC2034
   read -ra __release_info <<< "$(http "https://api.github.com/repos/${2}/releases/latest" | jq -r "${query}")"
 }
@@ -71,6 +71,7 @@ install_system_packages() {
         fish
         fontconfig
         fonts-powerline
+        fuse
         fzf
         gettext-base
         gnupg2
@@ -284,6 +285,12 @@ if ! bin_installed docker-compose; then
   chmod +x "${HOME}/.local/bin/docker-compose"
 fi
 
+# I guess FUSE + WSL2 + Debian 10 isn't working that well
+sudo groupadd fuse 2> /dev/null
+sudo usermod -aG fuse "${USER}"
+sudo chmod g+rw /dev/fuse
+sudo chgrp fuse /dev/fuse
+
 install_diff_tools() {
   local -r latest_dsf_version=$(get_github_latest_release so-fancy/diff-so-fancy)
   local -r latest_dsf_url="https://raw.githubusercontent.com/so-fancy/diff-so-fancy/${latest_dsf_version}/third_party/build_fatpack/diff-so-fancy"
@@ -310,6 +317,28 @@ install_diff_tools() {
 }
 
 install_diff_tools
+
+install_latest_nvim() {
+  local -a release_info
+  get_github_latest_release_info release_info "neovim/neovim" "appimage" "name"
+
+  if bin_installed nvim; then
+    local -r nvim_version=$(nvim --version | head -n1 | cut -d" " -f2)
+  fi
+
+  if ! bin_installed nvim || [ "${nvim_version}" != "${release_info[0]}" ]; then
+    if [[ ! -z ${nvim_version} ]]; then
+      info "Installing nvim (${nvim_version} -> ${release_info[0]})..."
+    else
+      info "Installing nvim (${release_info[0]})..."
+    fi
+    wget -qP "${HOME}/.local/bin/" "${release_info[1]}"
+    chmod +x "${HOME}/.local/bin/nvim.appimage"
+  fi
+}
+
+install_latest_nvim
+
 
 if grep -qi microsoft /proc/version; then
   info "Setting up WSL specific functionality..."

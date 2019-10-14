@@ -32,3 +32,13 @@ pip3 install --user -q --upgrade --no-warn-script-location --requirement=../defa
 # shellcheck disable=SC1090
 source "$HOME/.asdf/asdf.sh"
 asdf plugin-add python 2> /dev/null
+asdf plugin-add nodejs 2> /dev/null
+bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring 2> /dev/null
+
+asdf install > /dev/null 2>&1
+
+# Rust setup
+rustup toolchain add nightly
+cargo +nightly install --force racer rustfmt rustfmt-nightly 2> /dev/null
+rustup component add rustfmt rust-src --toolchain
+rustup component add rustfmt rust-src --toolchain nightly

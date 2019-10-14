@@ -1,0 +1,23 @@
+{
+  "diagnostic.displayByAle": true,
+  "languageserver": {
+    "bash": {
+      "args": [
+        "start"
+      ],
+      "command": "bash-language-server",
+      "filetypes": [
+        "sh"
+      ],
+      "ignoredRootPaths": [
+        "~"
+      ]
+    }
+  },
+  "python.linting.flake8Args": [
+    "-m",
+    "flake8"
+  ],
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Path": "~/.asdf/shims/python"
+}

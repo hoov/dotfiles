@@ -8,11 +8,16 @@ call minpac#init()
 " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
 call minpac#add('k-takata/minpac', {'type': 'opt'})
 call minpac#add('airblade/vim-gitgutter')
+" Tried this and did not like it.
+"call minpac#add('autozimu/LanguageClient-neovim', {'branch': 'next',
+"                                                 \ 'do': {-> system('bash install.sh')}})
 call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
 " This is super old, but the one most commonly used
 call minpac#add('dag/vim-fish')
 call minpac#add('dense-analysis/ale')
+" Ships with neovim, but take a later version
+call minpac#add('elzr/vim-json')
 call minpac#add('hashivim/vim-terraform')
 call minpac#add('jremmen/vim-ripgrep')
 call minpac#add('junegunn/fzf')
@@ -20,10 +25,13 @@ call minpac#add('junegunn/fzf.vim')
 call minpac#add('kchmck/vim-coffee-script')
 call minpac#add('kshenoy/vim-signature')
 call minpac#add('majutsushi/tagbar')
+"call minpac#add('mhinz/vim-signify')
+call minpac#add('raimon49/requirements.txt.vim')
 call minpac#add('rodjek/vim-puppet')
 call minpac#add('rust-lang/rust.vim')
 call minpac#add('saltstack/salt-vim')
 call minpac#add('scrooloose/nerdtree')
+"call minpac#add('SirVer/ultisnips')
 call minpac#add('tpope/vim-bundler')
 call minpac#add('tpope/vim-fugitive')
 call minpac#add('tpope/vim-projectionist')
@@ -35,16 +43,25 @@ call minpac#add('vim-airline/vim-airline')
 call minpac#add('vim-airline/vim-airline-themes')
 call minpac#add('yggdroot/indentline')
 
-" Autocomplete
-call minpac#add('ncm2/ncm2')
-call minpac#add('roxma/nvim-yarp')
+" Autocomplete, with dependency order
+"call minpac#add('roxma/nvim-yarp')
+"call minpac#add('ncm2/ncm2')
 
 " Autocomplete plugins
-call minpac#add('ncm2/ncm2-bufword')
-call minpac#add('ncm2/ncm2-jedi')
-call minpac#add('ncm2/ncm2-path')
-call minpac#add('ncm2/ncm2-vim')
+"call minpac#add('ncm2/ncm2-bufword')
+"call minpac#add('ncm2/ncm2-jedi')
+"call minpac#add('ncm2/ncm2-path')
+"call minpac#add('ncm2/ncm2-racer')
+"call minpac#add('ncm2/ncm2-ultisnips')
+"call minpac#add('ncm2/ncm2-vim')
+"call minpac#add('Shougo/neco-vim')
+
 call minpac#add('Shougo/neco-vim')
+call minpac#add('neoclide/coc-neco')
+
+let g:coc_global_extensions = ['coc-json', 'coc-python', 'coc-snippets', 'coc-rls']
+call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
+
 
 " Themes
 call minpac#add('chriskempson/base16-vim')
@@ -58,14 +75,26 @@ command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 
 " Plugin configuration
 
-" airblade/vim-gitgutter
-nmap <leader>g :GitGutterLineHighlightsToggle<CR>
+" autozimu/LanguageClient-neovim
+" Keeping this for now, in case I move off of ncm2 for the same functionality
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'sh': ['bash-langauge-server', 'start'],
+    \ }
 
 " dense-analysis/ale
 let g:ale_open_list = 1
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
-let g:ale_linters = { 'javascript': ['standard'], }
+let g:ale_linters = { 'javascript': ['standard'],
+                    \ 'rust': ['rls', 'rustc', 'rustfmt'], 
+                    \ 'sh': ['bash-language-server', 'shellcheck'], }
+" This makes things work with asdf
+let g:ale_python_flake8_executable = 'python'
+let g:ale_python_flake8_options = '-m flake8'
+let g:ale_sh_language_server_use_global = 1
+
+let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 
 " hashivim/vim-terraform
 let g:terraform_fmt_on_save=1
@@ -80,6 +109,14 @@ nnoremap <Leader>o :Files<CR>
 
 " majutsushi/tagbar
 nmap <F8> :TagbarToggle<CR>
+
+" mhinz/vim-signify
+nnoremap <leader>g :SignifyToggleHighlight<CR>
+nnoremap <leader>gd :SignifyDiff<cr>
+
+" rust-lang/rust.vim
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit = 1
 
 " scrooloose/nerdtree
 nmap <Leader>n :NERDTreeToggle<CR>
@@ -98,6 +135,8 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#whitespace#enabled = 1
+let g:airline#extensions#coc#enabled = 1
+
 nmap <leader>1 <Plug>AirlineSelectTab1
 nmap <leader>2 <Plug>AirlineSelectTab2
 nmap <leader>3 <Plug>AirlineSelectTab3
@@ -116,14 +155,69 @@ let g:airline_base16_solarized=1
 
 " yggdroot/indentline
 let g:indentLine_char = '¦'
+" This plugin might be more trouble than it's worth. This makes json behave
+" sanely
+let g:indentLine_concealcursor=""
 
 " Autocomplete configuration
 
 " ncm2/ncm2
-augroup ncm_setup
+"augroup ncm_setup
+"  autocmd!
+"  autocmd BufEnter * call ncm2#enable_for_buffer()
+"  set completeopt=noinsert,menuone,noselect
+"  set shortmess+=c
+"  inoremap <c-c> <ESC>
+"
+"  " Use <TAB> to select the popup menu:
+"  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+"  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"augroup END
+
+" neoclide/coc.nvim
+augroup coc_setup
   autocmd!
-  autocmd BufEnter * call ncm2#enable_for_buffer()
-  set completeopt=noinsert,menuone,noselect
+
+  set cmdheight=2
+  set shortmess+=c
+  set signcolumn=yes
+  set updatetime=300
+
+  inoremap <silent><expr> <TAB>
+        \ pumvisible() ? "\<C-n>" :
+        \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+        \ <SID>check_back_space() ? "\<TAB>" :
+        \ coc#refresh()
+  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>""
+
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
+
+  " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+  " Coc only does snippet and additional edit on confirm.
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+  " Use K to show documentation in preview window
+  nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+  function! s:show_documentation()
+    if (index(['vim','help'], &filetype) >= 0)
+      execute 'h '.expand('<cword>')
+    else
+      call CocAction('doHover')
+    endif
+  endfunction
+
+  " Remap keys for gotos
+  nmap <silent> gd <Plug>(coc-definition)
+  nmap <silent> gy <Plug>(coc-type-definition)
+  nmap <silent> gi <Plug>(coc-implementation)
+  nmap <silent> gr <Plug>(coc-references)
+
+  " Highlight symbol under cursor on CursorHold
+  autocmd CursorHold * silent call CocActionAsync("highlight")
 augroup END
 
 " Theme configuration
