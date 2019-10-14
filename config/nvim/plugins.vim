@@ -180,7 +180,13 @@ augroup coc_setup
 
   set cmdheight=2
   set shortmess+=c
-  set signcolumn=yes
+
+  if has('nvim-0.4')
+    set signcolumn=yes:2
+  else
+    set signcolumn=yes
+  end
+
   set updatetime=300
 
   inoremap <silent><expr> <TAB>
