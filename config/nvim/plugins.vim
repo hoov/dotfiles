@@ -67,7 +67,8 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 " Disable certain linters that coc takes care of
 let g:ale_linters = { 'javascript': ['standard'],
                     \ 'rust': [],
-                    \ 'sh': [], }
+                    \ 'sh': [],
+                    \ 'vim': ['vint']}
 " This makes things work with asdf
 let g:ale_python_flake8_executable = 'python'
 let g:ale_python_flake8_options = '-m flake8'
