@@ -40,6 +40,7 @@ call minpac#add('vim-airline/vim-airline-themes')
 call minpac#add('yggdroot/indentline')
 
 " Autocomplete plugins
+call minpac#add('Shougo/neco-vim')
 call minpac#add('neoclide/coc-neco')
 
 let g:coc_global_extensions = ['coc-diagnostic', 'coc-highlight', 'coc-json', 'coc-python', 'coc-rls', 'coc-snippets']
@@ -48,6 +49,7 @@ call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
 " Themes
 call minpac#add('chriskempson/base16-vim')
 call minpac#add('lifepillar/vim-solarized8')
+call minpac#add('morhetz/gruvbox')
 
 " Define user commands for updating/cleaning the plugins.
 " Each of them loads minpac, reloads .vimrc to register the
@@ -127,8 +129,8 @@ nmap <leader>- <Plug>AirlineSelectPrevTab
 nmap <leader>+ <Plug>AirlineSelectNextTab
 
 " vim-airline/vim-airline-themes
-let g:airline_theme='base16_vim'
-let g:airline_base16_solarized=1
+"let g:airline_theme='base16_vim'
+"let g:airline_base16_solarized=1
 
 " yggdroot/indentline
 let g:indentLine_char = '¦'
@@ -255,7 +257,11 @@ if has('termguicolors')
 endif
 let g:solarized_extra_hi_groups=1
 let g:solarized_old_cursor_style=1
-colorscheme solarized8
+"colorscheme solarized8
+
+let g:gruvbox_italic=1
+"let g:gruvbox_improved_strings=1
+colorscheme gruvbox
 
 if filereadable(expand("~/.vimrc_background")) && 0
   let base16colorspace=256

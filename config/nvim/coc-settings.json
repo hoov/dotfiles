@@ -1,10 +1,9 @@
 {
-  "coc.preferences.useQuickfixForLocations": true,
-  "diagnostic.displayByAle": false,
   "diagnostic-languageserver.filetypes": {
     "sh": "shellcheck",
     "vim": "vint"
   },
+  "diagnostic.displayByAle": false,
   "languageserver": {
     "bash": {
       "args": [
@@ -17,6 +16,42 @@
       "ignoredRootPaths": [
         "~"
       ]
+    },
+    "dls": {
+      "args": [
+        "--stdio"
+      ],
+      "command": "diagnostic-languageserver",
+      "filetypes": [
+        "vim"
+      ],
+      "initializationOptions": {
+        "filetypes": {
+          "vim": "vint"
+        },
+        "linters": {
+          "vint": {
+            "args": [
+              "--enable-neovim",
+              "-"
+            ],
+            "command": "vint",
+            "debounce": 100,
+            "formatLines": 1,
+            "formatPattern": [
+              "[^:]+:(\\d+):(\\d+):\\s*(.*$)",
+              {
+                "column": 2,
+                "line": 1,
+                "message": 3
+              }
+            ],
+            "offsetColumn": 0,
+            "offsetLine": 0,
+            "sourceName": "vint"
+          }
+        }
+      }
     }
   },
   "python.linting.flake8Args": [
