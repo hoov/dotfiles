@@ -6,6 +6,7 @@ config/fisher/
 config/fisherman-plugins/completions/
 config/fisherman-plugins/conf.d/
 config/fisherman-plugins/functions/
+config/hub
 config/htop/htoprc
 config/nvim/.netrwhist
 config/nvim/pack/

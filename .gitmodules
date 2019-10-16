@@ -10,3 +10,6 @@
 [submodule "asdf"]
 	path = asdf
 	url = https://github.com/asdf-vm/asdf.git
+[submodule "vendor/tmux"]
+	path = vendor/tmux
+	url = git://github.com/tmux/tmux.git
