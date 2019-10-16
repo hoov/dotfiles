@@ -1,5 +1,4 @@
-"Plug 'docker/docker', { 'rtp': '/contrib/syntax/vim/' }
-"Plug 'ternjs/tern_for_vim', { 'do': function('BuildTern') }
+scriptencoding utf-8
 
 packadd minpac
 
@@ -7,10 +6,7 @@ call minpac#init()
 
 " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
 call minpac#add('k-takata/minpac', {'type': 'opt'})
-call minpac#add('airblade/vim-gitgutter')
-" Tried this and did not like it.
-"call minpac#add('autozimu/LanguageClient-neovim', {'branch': 'next',
-"                                                 \ 'do': {-> system('bash install.sh')}})
+call minpac#add('airblade/vim-gitgutter') " Tried this and did not like it.
 call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
 " This is super old, but the one most commonly used
@@ -43,28 +39,15 @@ call minpac#add('vim-airline/vim-airline')
 call minpac#add('vim-airline/vim-airline-themes')
 call minpac#add('yggdroot/indentline')
 
-" Autocomplete, with dependency order
-"call minpac#add('roxma/nvim-yarp')
-"call minpac#add('ncm2/ncm2')
-
 " Autocomplete plugins
-"call minpac#add('ncm2/ncm2-bufword')
-"call minpac#add('ncm2/ncm2-jedi')
-"call minpac#add('ncm2/ncm2-path')
-"call minpac#add('ncm2/ncm2-racer')
-"call minpac#add('ncm2/ncm2-ultisnips')
-"call minpac#add('ncm2/ncm2-vim')
-"call minpac#add('Shougo/neco-vim')
-
-call minpac#add('Shougo/neco-vim')
 call minpac#add('neoclide/coc-neco')
 
-let g:coc_global_extensions = ['coc-json', 'coc-python', 'coc-snippets', 'coc-rls']
+let g:coc_global_extensions = ['coc-diagnostic', 'coc-highlight', 'coc-json', 'coc-python', 'coc-rls', 'coc-snippets']
 call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
-
 
 " Themes
 call minpac#add('chriskempson/base16-vim')
+call minpac#add('lifepillar/vim-solarized8')
 
 " Define user commands for updating/cleaning the plugins.
 " Each of them loads minpac, reloads .vimrc to register the
@@ -75,20 +58,14 @@ command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 
 " Plugin configuration
 
-" autozimu/LanguageClient-neovim
-" Keeping this for now, in case I move off of ncm2 for the same functionality
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'sh': ['bash-langauge-server', 'start'],
-    \ }
-
 " dense-analysis/ale
-let g:ale_open_list = 1
+let g:ale_open_list = 0
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
+" Disable certain linters that coc takes care of
 let g:ale_linters = { 'javascript': ['standard'],
-                    \ 'rust': ['rls', 'rustc', 'rustfmt'], 
-                    \ 'sh': ['bash-language-server', 'shellcheck'], }
+                    \ 'rust': [],
+                    \ 'sh': [], }
 " This makes things work with asdf
 let g:ale_python_flake8_executable = 'python'
 let g:ale_python_flake8_options = '-m flake8'
@@ -182,7 +159,7 @@ augroup coc_setup
   set shortmess+=c
 
   if has('nvim-0.4')
-    set signcolumn=yes:2
+    set signcolumn=auto:3
   else
     set signcolumn=yes
   end
@@ -224,6 +201,30 @@ augroup coc_setup
 
   " Highlight symbol under cursor on CursorHold
   autocmd CursorHold * silent call CocActionAsync("highlight")
+  
+  " Create mappings for function text object, requires document symbols feature of languageserver.
+  xmap if <Plug>(coc-funcobj-i)
+  xmap af <Plug>(coc-funcobj-a)
+  omap if <Plug>(coc-funcobj-i)
+  omap af <Plug>(coc-funcobj-a)
+
+  " Using CocList
+  " Show all diagnostics
+  nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+  " Manage extensions
+  nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+  " Show commands
+  nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+  " Find symbol of current document
+  nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+  " Search workspace symbols
+  nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+  " Do default action for next item.
+  nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+  " Do default action for previous item.
+  nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+  " Resume latest coc list
+  nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 augroup END
 
 " Theme configuration
@@ -235,15 +236,34 @@ function! s:base16_customize() abort
   call Base16hi("Italic", "", "", "", "", "italic", "")
   call Base16hi("Comment", g:base16_gui03, "", g:base16_cterm03, "", "italic", "")
   call Base16hi("gitcommitComment", g:base16_gui03, "", g:base16_cterm03, "", "italic", "")
+
+  call Base16hi("SpellBad", g:base16_gui03, "background", g:base16_cterm03, g:base16_cterm00, "undercurl", g:base16_gui08)
+  call Base16hi("SpellBad",   "", "", g:base16_cterm08, g:base16_cterm00, "undercurl", g:base16_gui08)
+  call Base16hi("SpellCap",   "", "", g:base16_cterm0A, g:base16_cterm00, "", "")
+  call Base16hi("SpellLocal", "", "", g:base16_cterm0D, g:base16_cterm00, "", "")
+  call Base16hi("SpellRare",  "", "", g:base16_cterm0B, g:base16_cterm00, "undercurl", g:base16_gui08)
 endfunction
 
-augroup on_change_colorschema
-  autocmd!
-  autocmd ColorScheme * call s:base16_customize()
-augroup END
+"augroup on_change_colorschema
+"  autocmd!
+"  autocmd ColorScheme * call s:base16_customize()
+"augroup END
 
-if filereadable(expand("~/.vimrc_background"))
+set background=dark
+if has('termguicolors')
+  set termguicolors
+endif
+let g:solarized_extra_hi_groups=1
+let g:solarized_old_cursor_style=1
+colorscheme solarized8
+
+if filereadable(expand("~/.vimrc_background")) && 0
   let base16colorspace=256
+
+  if has('termguicolors')
+    set termguicolors
+  endif
+
   set background=dark
   source ~/.vimrc_background
 endif

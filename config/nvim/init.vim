@@ -31,6 +31,8 @@ set scrolloff=3
 set ignorecase
 set smartcase
 
+set spelllang=en_us
+
 " Never want to use the mouse
 set mouse=
 
