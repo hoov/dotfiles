@@ -1,9 +1,9 @@
 cask_args appdir: "/Applications"
 
 tap "buo/cask-upgrade"
-tap "caskroom/cask"
-tap "caskroom/fonts"
-tap "caskroom/versions"
+tap "homebrew/cask-cask"
+tap "homebrew/cask-fonts"
+tap "homebrew/cask-versions"
 tap "dteoh/sqa"
 tap "heroku/brew"
 tap "homebrew/bundle"
@@ -16,6 +16,7 @@ brew "mas"
 brew "rcm"
 cask "java"
 
+brew "asdf"
 brew "automake"
 brew "cmake"
 brew "coreutils"
@@ -41,8 +42,11 @@ brew "yarn", args: ["without-node"]
 
 cask "alfred"
 cask "atom"
+cask "bat"
+cask "caffeine"
 cask "chromedriver"
 cask "google-chrome"
+cask "kitty"
 cask "xscreensaver"
 
 cask "caskroom/versions/firefox-developer-edition"
