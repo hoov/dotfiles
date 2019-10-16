@@ -42,3 +42,6 @@ rustup toolchain add nightly
 cargo +nightly install --force racer rustfmt rustfmt-nightly 2> /dev/null
 rustup component add rustfmt rust-src --toolchain
 rustup component add rustfmt rust-src --toolchain nightly
+
+# More modern terminfo stuff
+tic -x ../terminfo.src

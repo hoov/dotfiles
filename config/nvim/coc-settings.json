@@ -1,5 +1,10 @@
 {
-  "diagnostic.displayByAle": true,
+  "coc.preferences.useQuickfixForLocations": true,
+  "diagnostic.displayByAle": false,
+  "diagnostic-languageserver.filetypes": {
+    "sh": "shellcheck",
+    "vim": "vint"
+  },
   "languageserver": {
     "bash": {
       "args": [
@@ -19,5 +24,6 @@
     "flake8"
   ],
   "python.linting.flake8Enabled": true,
-  "python.linting.flake8Path": "~/.asdf/shims/python"
+  "python.linting.flake8Path": "~/.asdf/shims/python",
+  "suggest.preferCompleteThanJumpPlaceholder": true
 }
