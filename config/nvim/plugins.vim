@@ -6,25 +6,26 @@ call minpac#init()
 
 " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
 call minpac#add('k-takata/minpac', {'type': 'opt'})
-call minpac#add('airblade/vim-gitgutter') " Tried this and did not like it.
+
+call minpac#add('airblade/vim-gitgutter') " I guess this is better than signify?
 call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
-" This is super old, but the one most commonly used
-call minpac#add('dag/vim-fish')
-"call minpac#add('dense-analysis/ale')
-" Ships with neovim, but take a later version
+call minpac#add('dag/vim-fish') " This is super old, but the one most commonly used
+call minpac#add('dense-analysis/ale')
 call minpac#add('elzr/vim-json')
 call minpac#add('hashivim/vim-terraform')
-call minpac#add('jremmen/vim-ripgrep')
+call minpac#add('itchyny/lightline.vim')
+call minpac#add('jremmen/vim-ripgrep') " Ships with neovim, but take a later version
 call minpac#add('junegunn/fzf')
 call minpac#add('junegunn/fzf.vim')
 call minpac#add('kchmck/vim-coffee-script')
 call minpac#add('kshenoy/vim-signature')
 call minpac#add('majutsushi/tagbar')
-"call minpac#add('mhinz/vim-signify')
+call minpac#add('niklaas/lightline-gitdiff')
 call minpac#add('raimon49/requirements.txt.vim')
 call minpac#add('rodjek/vim-puppet')
 call minpac#add('rust-lang/rust.vim')
+call minpac#add('sainnhe/artify.vim')
 call minpac#add('saltstack/salt-vim')
 call minpac#add('scrooloose/nerdtree')
 "call minpac#add('SirVer/ultisnips')
@@ -35,8 +36,8 @@ call minpac#add('tpope/vim-rails')
 call minpac#add('tpope/vim-rake')
 call minpac#add('tpope/vim-repeat')
 call minpac#add('tpope/vim-surround')
-call minpac#add('vim-airline/vim-airline')
-call minpac#add('vim-airline/vim-airline-themes')
+"call minpac#add('vim-airline/vim-airline')
+"call minpac#add('vim-airline/vim-airline-themes')
 call minpac#add('yggdroot/indentline')
 
 " Autocomplete plugins
@@ -47,9 +48,9 @@ let g:coc_global_extensions = ['coc-diagnostic', 'coc-highlight', 'coc-json', 'c
 call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
 
 " Themes
-call minpac#add('chriskempson/base16-vim')
-call minpac#add('lifepillar/vim-solarized8')
-call minpac#add('morhetz/gruvbox')
+" The official one is morhetz/gruvbox, but it's busted in a bunch of cases.
+" This fork seems to be a little better
+call minpac#add('gruvbox-community/gruvbox')
 
 " Define user commands for updating/cleaning the plugins.
 " Each of them loads minpac, reloads .vimrc to register the
@@ -59,6 +60,11 @@ command! PackClean packadd minpac | source $MYVIMRC | call minpac#clean()
 command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 
 " Plugin configuration
+
+" airblade/vim-gitgutter
+let g:gitgutter_sign_allow_clobber = 1
+let g:gitgutter_override_sign_column_highlight = 0
+nnoremap <leader>g :GitGutterLineHighlightsToggle<CR>
 
 " dense-analysis/ale
 let g:ale_open_list = 0
@@ -79,6 +85,30 @@ let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 " hashivim/vim-terraform
 let g:terraform_fmt_on_save=1
 
+" itchyny/lightline.vim
+set showtabline=2
+
+let g:lightline = {}
+let g:lightline.separator = { 'left': "\ue0b8 ", 'right': "\ue0be " }
+let g:lightline.subseparator = { 'left': "\ue0b9 ", 'right': "\ue0b9 " }
+let g:lightline.tabline_separator = { 'left': "\ue0bc ", 'right': "\ue0ba " }
+let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb\ufe0f " }
+let g:lightline.tabline = {
+      \ 'left': [ [ 'vim_logo', 'tabs' ] ],
+      \ 'right': [ [ 'artify_gitbranch' ],
+      \ [ 'gitdiff' ] ]
+      \ }
+let g:lightline.component = {
+      \ 'vim_logo': "\ue7c5"
+      \ }
+let g:lightline.component_function = {
+      \ 'artify_gitbranch': 'Artify_gitbranch',
+      \ 'artify_mode': 'Artify_lightline_mode}'
+      \ }
+let g:lightline.component_expand = {
+      \ 'gitdiff': 'lightline#gitdiff#get'
+      \ }
+
 " jremmen/vim-ripgrep
 map <Leader>r <Esc>:Rg<CR>
 map <Leader>R <Esc>:Rg 
@@ -90,13 +120,27 @@ nnoremap <Leader>o :Files<CR>
 " majutsushi/tagbar
 nmap <F8> :TagbarToggle<CR>
 
-" mhinz/vim-signify
-nnoremap <leader>g :SignifyToggleHighlight<CR>
-nnoremap <leader>gd :SignifyDiff<cr>
+let g:lightline#gitdiff#separator = ' | '
+let g:lightline#gitdiff#indicator_added='+ '
+let g:lightline#gitdiff#indicator_deleted='- '
+let g:lightline#gitdiff#indicator_modified='~ '
 
 " rust-lang/rust.vim
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit = 1
+
+" sainnhe/artify.vim
+function! Artify_lightline_mode() abort
+    return Artify(lightline#mode(), 'monospace')
+endfunction
+
+function! Artify_gitbranch() abort
+    if FugitiveHead() !=# ''
+        return Artify(FugitiveHead(), 'monospace')." \ue725"
+    else
+        return "\ue61b"
+    endif
+endfunction
 
 " scrooloose/nerdtree
 nmap <Leader>n :NERDTreeToggle<CR>
@@ -109,25 +153,25 @@ augroup nerdtree_stdin
 augroup END
 
 " vim-airline/vim-airline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#ale#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline#extensions#whitespace#enabled = 1
-let g:airline#extensions#coc#enabled = 1
-
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
-nmap <leader>- <Plug>AirlineSelectPrevTab
-nmap <leader>+ <Plug>AirlineSelectNextTab
+"let g:airline_powerline_fonts = 1
+"let g:airline#extensions#ale#enabled = 1
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#tab_nr_type = 1
+"let g:airline#extensions#tabline#buffer_idx_mode = 1
+"let g:airline#extensions#whitespace#enabled = 1
+"let g:airline#extensions#coc#enabled = 1
+"
+"nmap <leader>1 <Plug>AirlineSelectTab1
+"nmap <leader>2 <Plug>AirlineSelectTab2
+"nmap <leader>3 <Plug>AirlineSelectTab3
+"nmap <leader>4 <Plug>AirlineSelectTab4
+"nmap <leader>5 <Plug>AirlineSelectTab5
+"nmap <leader>6 <Plug>AirlineSelectTab6
+"nmap <leader>7 <Plug>AirlineSelectTab7
+"nmap <leader>8 <Plug>AirlineSelectTab8
+"nmap <leader>9 <Plug>AirlineSelectTab9
+"nmap <leader>- <Plug>AirlineSelectPrevTab
+"nmap <leader>+ <Plug>AirlineSelectNextTab
 
 " vim-airline/vim-airline-themes
 "let g:airline_theme='base16_vim'
@@ -232,45 +276,11 @@ augroup END
 
 " Theme configuration
 
-" chriskempson/base16-vim
-function! s:base16_customize() abort
-  " Add the same fancy things that the solarized theme from the actual author
-  " does
-  call Base16hi("Italic", "", "", "", "", "italic", "")
-  call Base16hi("Comment", g:base16_gui03, "", g:base16_cterm03, "", "italic", "")
-  call Base16hi("gitcommitComment", g:base16_gui03, "", g:base16_cterm03, "", "italic", "")
-
-  call Base16hi("SpellBad", g:base16_gui03, "background", g:base16_cterm03, g:base16_cterm00, "undercurl", g:base16_gui08)
-  call Base16hi("SpellBad",   "", "", g:base16_cterm08, g:base16_cterm00, "undercurl", g:base16_gui08)
-  call Base16hi("SpellCap",   "", "", g:base16_cterm0A, g:base16_cterm00, "", "")
-  call Base16hi("SpellLocal", "", "", g:base16_cterm0D, g:base16_cterm00, "", "")
-  call Base16hi("SpellRare",  "", "", g:base16_cterm0B, g:base16_cterm00, "undercurl", g:base16_gui08)
-endfunction
-
-"augroup on_change_colorschema
-"  autocmd!
-"  autocmd ColorScheme * call s:base16_customize()
-"augroup END
-
+" gruvbox-community/gruvbox
 set background=dark
 if has('termguicolors')
   set termguicolors
 endif
-let g:solarized_extra_hi_groups=1
-let g:solarized_old_cursor_style=1
-"colorscheme solarized8
 
 let g:gruvbox_italic=1
-"let g:gruvbox_improved_strings=1
 colorscheme gruvbox
-
-if filereadable(expand("~/.vimrc_background")) && 0
-  let base16colorspace=256
-
-  if has('termguicolors')
-    set termguicolors
-  endif
-
-  set background=dark
-  source ~/.vimrc_background
-endif
