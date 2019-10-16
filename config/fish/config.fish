@@ -51,6 +51,12 @@ case Darwin
         end
     end
     test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+    if test -e /usr/local/opt/ncurses/bin
+        set PATH /usr/local/opt/ncurses/bin $PATH
+        set -gx LDFLAGS "-L/usr/local/opt/ncurses/lib"
+        set -gx CPPFLAGS "-I/usr/local/opt/ncurses/include"
+        set -gx PKG_CONFIG_PATH "/usr/local/opt/ncurses/lib/pkgconfig"
+    end
 case Linux
     set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
 end

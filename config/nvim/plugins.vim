@@ -11,7 +11,7 @@ call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
 " This is super old, but the one most commonly used
 call minpac#add('dag/vim-fish')
-call minpac#add('dense-analysis/ale')
+"call minpac#add('dense-analysis/ale')
 " Ships with neovim, but take a later version
 call minpac#add('elzr/vim-json')
 call minpac#add('hashivim/vim-terraform')
