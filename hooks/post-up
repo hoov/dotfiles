@@ -47,3 +47,12 @@ cargo +nightly install racer
 
 # More modern terminfo stuff
 tic -x ../terminfo.src
+
+# tmux plugins
+# These scripts are supposed to work even if tmux isn't running, but that's not true. So instead, we're going to do
+# this gross hack. Race condition? Just add a sleep...
+tmux new-session -d "sleep 30"
+sleep 0.1
+"${HOME}/.tmux/plugins/tpm/bin/install_plugins"
+"${HOME}/.tmux/plugins/tpm/bin/clean_plugins"
+"${HOME}/.tmux/plugins/tpm/bin/update_plugins" all
