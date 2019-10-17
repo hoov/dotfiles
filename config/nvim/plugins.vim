@@ -87,13 +87,13 @@ let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 
 " edkolev/tmuxline.vim
 let g:tmuxline_preset = {
-      \ 'a': ' #S',
+      \ 'a': '  #S',
       \ 'b': '%R',
       \ 'win': [ '#I', '#W'],
       \ 'cwin': [ '#I', '#W', '#F'],
-      \ 'x': '#{prefix_highlight}',
-      \ 'y': '%a %b %e %I:%M %P',
-      \ 'z': '\uf108  #H'
+      \ 'x': '#{cpu_percentage}',
+      \ 'y': '  %a %b %e %I:%M %P',
+      \ 'z': '  #H'
       \ }
 let g:tmuxline_separators = {
       \ 'left': '',

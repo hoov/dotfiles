@@ -59,6 +59,7 @@ get_github_download_url() {
 
 sudo -v
 
+# [FIXME] Add contrib and non-free to sources.list
 # This has been tested with Debian *buster* on WSL
 install_system_packages() {
   local -a packages
@@ -121,6 +122,7 @@ install_system_packages() {
         shellcheck
         software-properties-common
         strace
+        sysstat
         telnet
         tmux
         tree
