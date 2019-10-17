@@ -12,6 +12,7 @@ call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
 call minpac#add('dag/vim-fish') " This is super old, but the one most commonly used
 call minpac#add('dense-analysis/ale')
+call minpac#add('edkolev/tmuxline.vim')
 call minpac#add('elzr/vim-json')
 call minpac#add('hashivim/vim-terraform')
 call minpac#add('itchyny/lightline.vim')
@@ -84,6 +85,24 @@ let g:ale_sh_language_server_use_global = 1
 
 let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 
+" edkolev/tmuxline.vim
+let g:tmuxline_preset = {
+      \ 'a': ' #S',
+      \ 'b': '%R',
+      \ 'win': [ '#I', '#W'],
+      \ 'cwin': [ '#I', '#W', '#F'],
+      \ 'x': '#{prefix_highlight}',
+      \ 'y': '%a %b %e %I:%M %P',
+      \ 'z': '\uf108  #H'
+      \ }
+let g:tmuxline_separators = {
+      \ 'left': '',
+      \ 'left_alt': '',
+      \ 'right': '',
+      \ 'right_alt': '',
+      \ 'space': ' '
+      \ }
+
 " hashivim/vim-terraform
 let g:terraform_fmt_on_save=1
 
@@ -91,10 +110,10 @@ let g:terraform_fmt_on_save=1
 set showtabline=2
 
 let g:lightline = {}
-let g:lightline.separator = { 'left': "\ue0b8 ", 'right': "\ue0be " }
-let g:lightline.subseparator = { 'left': "\ue0b9 ", 'right': "\ue0b9 " }
-let g:lightline.tabline_separator = { 'left': "\ue0bc ", 'right': "\ue0ba " }
-let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb " }
+let g:lightline.separator = { 'left': "", 'right': "" }
+let g:lightline.subseparator = { 'left': "", 'right': "" }
+let g:lightline.tabline_separator = { 'left': "", 'right': "" }
+let g:lightline.tabline_subseparator = { 'left': "", 'right': "" }
 let g:lightline.tabline = {
       \ 'left': [ [ 'vim_logo', 'buffers' ] ],
       \ 'right': [ [ 'artify_gitbranch' ],
@@ -103,7 +122,7 @@ let g:lightline.tabline = {
 
 " Expansions
 let g:lightline.component = {
-      \ 'vim_logo': "\ue7c5"
+      \ 'vim_logo': " "
       \ }
 let g:lightline.component_function = {
       \ 'artify_gitbranch': 'Artify_gitbranch',
@@ -136,7 +155,8 @@ let g:lightline#gitdiff#indicator_modified='~ '
 " mengelbrecht/lightline-bufferline
 let g:lightline#bufferline#enable_devicons = 1
 let g:lightline#bufferline#unicode_symbols = 1
-let g:lightline#bufferline#show_number = 1
+let g:lightline#bufferline#show_number = 2
+let g:lightline#bufferline#filename_modifier = ':t'
 
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
 nmap <Leader>2 <Plug>lightline#bufferline#go(2)
@@ -160,13 +180,16 @@ endfunction
 
 function! Artify_gitbranch() abort
   if FugitiveHead() !=# ''
-    return Artify(FugitiveHead(), 'monospace')." \ue725"
+    return Artify(FugitiveHead(), 'monospace')." "
   else
-    return "\ue61b"
+    return "\ue61b "
   endif
 endfunction
 
 " scrooloose/nerdtree
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeDirArrows = 0
+
 nmap <Leader>n :NERDTreeToggle<CR>
 nmap <Leader>N :NERDTreeFind<CR>
 " If vim is opened without a file specified, open NERDTree
@@ -175,31 +198,6 @@ augroup nerdtree_stdin
   autocmd StdinReadPre * let s:std_in=1
   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 augroup END
-
-" vim-airline/vim-airline
-"let g:airline_powerline_fonts = 1
-"let g:airline#extensions#ale#enabled = 1
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#tab_nr_type = 1
-"let g:airline#extensions#tabline#buffer_idx_mode = 1
-"let g:airline#extensions#whitespace#enabled = 1
-"let g:airline#extensions#coc#enabled = 1
-"
-"nmap <leader>1 <Plug>AirlineSelectTab1
-"nmap <leader>2 <Plug>AirlineSelectTab2
-"nmap <leader>3 <Plug>AirlineSelectTab3
-"nmap <leader>4 <Plug>AirlineSelectTab4
-"nmap <leader>5 <Plug>AirlineSelectTab5
-"nmap <leader>6 <Plug>AirlineSelectTab6
-"nmap <leader>7 <Plug>AirlineSelectTab7
-"nmap <leader>8 <Plug>AirlineSelectTab8
-"nmap <leader>9 <Plug>AirlineSelectTab9
-"nmap <leader>- <Plug>AirlineSelectPrevTab
-"nmap <leader>+ <Plug>AirlineSelectNextTab
-
-" vim-airline/vim-airline-themes
-"let g:airline_theme='base16_vim'
-"let g:airline_base16_solarized=1
 
 " yggdroot/indentline
 let g:indentLine_char = '¦'
