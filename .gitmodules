@@ -13,3 +13,9 @@
 [submodule "vendor/tmux"]
 	path = vendor/tmux
 	url = git://github.com/tmux/tmux.git
+[submodule "config/tmux/plugins/tpm"]
+	path = config/tmux/plugins/tpm
+	url = git://github.com/tmux-plugins/tpm.git
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = git://github.com/tmux-plugins/tpm.git
