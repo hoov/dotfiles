@@ -21,10 +21,12 @@ call minpac#add('junegunn/fzf.vim')
 call minpac#add('kchmck/vim-coffee-script')
 call minpac#add('kshenoy/vim-signature')
 call minpac#add('majutsushi/tagbar')
+call minpac#add('mengelbrecht/lightline-bufferline')
 call minpac#add('niklaas/lightline-gitdiff')
 call minpac#add('raimon49/requirements.txt.vim')
 call minpac#add('rodjek/vim-puppet')
 call minpac#add('rust-lang/rust.vim')
+call minpac#add('ryanoasis/vim-devicons')
 call minpac#add('sainnhe/artify.vim')
 call minpac#add('saltstack/salt-vim')
 call minpac#add('scrooloose/nerdtree')
@@ -92,12 +94,14 @@ let g:lightline = {}
 let g:lightline.separator = { 'left': "\ue0b8 ", 'right': "\ue0be " }
 let g:lightline.subseparator = { 'left': "\ue0b9 ", 'right': "\ue0b9 " }
 let g:lightline.tabline_separator = { 'left': "\ue0bc ", 'right': "\ue0ba " }
-let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb\ufe0f " }
+let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb " }
 let g:lightline.tabline = {
-      \ 'left': [ [ 'vim_logo', 'tabs' ] ],
+      \ 'left': [ [ 'vim_logo', 'buffers' ] ],
       \ 'right': [ [ 'artify_gitbranch' ],
       \ [ 'gitdiff' ] ]
       \ }
+
+" Expansions
 let g:lightline.component = {
       \ 'vim_logo': "\ue7c5"
       \ }
@@ -106,9 +110,13 @@ let g:lightline.component_function = {
       \ 'artify_mode': 'Artify_lightline_mode}'
       \ }
 let g:lightline.component_expand = {
+      \ 'buffers': 'lightline#bufferline#buffers',
       \ 'gitdiff': 'lightline#gitdiff#get'
       \ }
-
+let g:lightline.component_type = {
+      \ 'buffers':  'tabsel'
+      \ }
+"
 " jremmen/vim-ripgrep
 map <Leader>r <Esc>:Rg<CR>
 map <Leader>R <Esc>:Rg 
@@ -125,6 +133,22 @@ let g:lightline#gitdiff#indicator_added='+ '
 let g:lightline#gitdiff#indicator_deleted='- '
 let g:lightline#gitdiff#indicator_modified='~ '
 
+" mengelbrecht/lightline-bufferline
+let g:lightline#bufferline#enable_devicons = 1
+let g:lightline#bufferline#unicode_symbols = 1
+let g:lightline#bufferline#show_number = 1
+
+nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+nmap <Leader>6 <Plug>lightline#bufferline#go(6) 
+nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+nmap <Leader>0 <Plug>lightline#bufferline#go(10)
+
 " rust-lang/rust.vim
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit = 1
@@ -135,11 +159,11 @@ function! Artify_lightline_mode() abort
 endfunction
 
 function! Artify_gitbranch() abort
-    if FugitiveHead() !=# ''
-        return Artify(FugitiveHead(), 'monospace')." \ue725"
-    else
-        return "\ue61b"
-    endif
+  if FugitiveHead() !=# ''
+    return Artify(FugitiveHead(), 'monospace')." \ue725"
+  else
+    return "\ue61b"
+  endif
 endfunction
 
 " scrooloose/nerdtree
@@ -184,19 +208,6 @@ let g:indentLine_char = '¦'
 let g:indentLine_concealcursor=""
 
 " Autocomplete configuration
-
-" ncm2/ncm2
-"augroup ncm_setup
-"  autocmd!
-"  autocmd BufEnter * call ncm2#enable_for_buffer()
-"  set completeopt=noinsert,menuone,noselect
-"  set shortmess+=c
-"  inoremap <c-c> <ESC>
-"
-"  " Use <TAB> to select the popup menu:
-"  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-"  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"augroup END
 
 " neoclide/coc.nvim
 augroup coc_setup
