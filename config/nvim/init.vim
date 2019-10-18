@@ -53,27 +53,28 @@ function! SetExecutableBit()
 endfunction
 command! Xbit call SetExecutableBit()
 
-" netrw
-" let g:netrw_banner = 0
-" let g:netrw_liststyle = 3
-" let g:netrw_browse_split = 4
-" let g:netrw_altv = 1
-" let g:netrw_winsize = 25
-" augroup ProjectDrawer
-"   autocmd!
-"   autocmd StdinReadPre * let s:std_in=1
-"   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | :Vexplore | endif
-" augroup END
-
-" Filetypes
-
-" General two space indent for certain filetypes
 augroup vimrc
   autocmd!
   " Only highlight current lines when window has focus
   autocmd WinEnter,InsertLeave * set cursorline
   autocmd WinLeave,InsertEnter * set nocursorline
   autocmd FileType gitconfig,javascript,json,ruby,terraform,vim,yaml setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=2
+
+  " Reloads vimrc after saving but keep cursor position
+  if !exists('*ReloadVimrc')
+    function! ReloadVimrc() abort
+      let save_cursor = getcurpos()
+      source $MYVIMRC
+      call setpos('.', save_cursor)
+      call lightline#init()
+      call lightline#colorscheme()
+      call lightline#update()
+      redraw!
+    endfunction
+  endif
+
+  let $VIM_CONFIG_HOME=expand('<sfile>:h')
+  autocmd! BufWritePost $VIM_CONFIG_HOME/*.vim call ReloadVimrc()
 augroup END
 
 " Fish Shell
