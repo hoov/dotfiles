@@ -8,6 +8,7 @@ config/fisherman-plugins/conf.d/
 config/fisherman-plugins/functions/
 config/hub
 config/htop/htoprc
+config/kitty/local.conf
 config/nvim/.netrwhist
 config/nvim/pack/
 config/wslu
