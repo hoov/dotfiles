@@ -6,7 +6,6 @@ call minpac#init()
 
 " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
 call minpac#add('k-takata/minpac', {'type': 'opt'})
-
 call minpac#add('airblade/vim-gitgutter') " I guess this is better than signify?
 call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
@@ -32,6 +31,7 @@ call minpac#add('sainnhe/artify.vim')
 call minpac#add('saltstack/salt-vim')
 call minpac#add('scrooloose/nerdtree')
 "call minpac#add('SirVer/ultisnips')
+call minpac#add('tmux-plugins/vim-tmux')
 call minpac#add('tpope/vim-bundler')
 call minpac#add('tpope/vim-fugitive')
 call minpac#add('tpope/vim-projectionist')
@@ -39,15 +39,21 @@ call minpac#add('tpope/vim-rails')
 call minpac#add('tpope/vim-rake')
 call minpac#add('tpope/vim-repeat')
 call minpac#add('tpope/vim-surround')
-"call minpac#add('vim-airline/vim-airline')
-"call minpac#add('vim-airline/vim-airline-themes')
 call minpac#add('yggdroot/indentline')
 
 " Autocomplete plugins
 call minpac#add('Shougo/neco-vim')
 call minpac#add('neoclide/coc-neco')
 
-let g:coc_global_extensions = ['coc-diagnostic', 'coc-highlight', 'coc-json', 'coc-python', 'coc-rls', 'coc-snippets']
+let g:coc_global_extensions = [
+      \ 'coc-diagnostic',
+      \ 'coc-highlight',
+      \ 'coc-json',
+      \ 'coc-python',
+      \ 'coc-rls',
+      \ 'coc-snippets'
+      \ ]
+
 call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
 
 " Themes
@@ -83,7 +89,7 @@ let g:ale_python_flake8_executable = 'python'
 let g:ale_python_flake8_options = '-m flake8'
 let g:ale_sh_language_server_use_global = 1
 
-let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
+let g:ale_rust_cargo_use_clippy = executable("cargo-clippy")
 
 " edkolev/tmuxline.vim
 let g:tmuxline_preset = {
@@ -91,17 +97,26 @@ let g:tmuxline_preset = {
       \ 'b': '%R',
       \ 'win': [ '#I', '#W'],
       \ 'cwin': [ '#I', '#W', '#F'],
-      \ 'x': '#{cpu_percentage}',
+      \ 'x': [ '#{sysstat_cpu} #{cpu.color}#{cpu.pused}', '  #{cpu_fg_color}#{cpu_percentage} #{cpu_icon}' ],
       \ 'y': '  %a %b %e %I:%M %P',
       \ 'z': '  #H'
       \ }
 let g:tmuxline_separators = {
       \ 'left': '',
-      \ 'left_alt': '',
+      \ 'left_alt': ' ',
       \ 'right': '',
-      \ 'right_alt': '',
+      \ 'right_alt': ' ',
       \ 'space': ' '
       \ }
+
+function! SaveTmuxline() abort
+  Tmuxline lightline
+  TmuxlineSnapshot! ~/.tmux/gruvbox.conf
+  silent execute '!tmux source-file ~/.tmux.conf'
+	silent execute '!tmux display-message "Sourced .tmux.conf"'
+endfunction
+
+nnoremap <silent> <leader>T :call SaveTmuxline()<CR>
 
 " hashivim/vim-terraform
 let g:terraform_fmt_on_save=1
@@ -110,10 +125,10 @@ let g:terraform_fmt_on_save=1
 set showtabline=2
 
 let g:lightline = {}
-let g:lightline.separator = { 'left': "", 'right': "" }
-let g:lightline.subseparator = { 'left': "", 'right': "" }
-let g:lightline.tabline_separator = { 'left': "", 'right': "" }
-let g:lightline.tabline_subseparator = { 'left': "", 'right': "" }
+let g:lightline.separator = { 'left': '', 'right': '' }
+let g:lightline.subseparator = { 'left': ' ', 'right': ' ' }
+let g:lightline.tabline_separator = { 'left': '', 'right': '' }
+let g:lightline.tabline_subseparator = { 'left': ' ', 'right': ' ' }
 let g:lightline.tabline = {
       \ 'left': [ [ 'vim_logo', 'buffers' ] ],
       \ 'right': [ [ 'artify_gitbranch' ],
@@ -180,7 +195,7 @@ endfunction
 
 function! Artify_gitbranch() abort
   if FugitiveHead() !=# ''
-    return Artify(FugitiveHead(), 'monospace')." "
+    return Artify(FugitiveHead(), 'monospace')."  "
   else
     return "\ue61b "
   endif
@@ -222,6 +237,7 @@ augroup coc_setup
 
   set updatetime=300
 
+  let g:coc_enable_locationlist=1
   inoremap <silent><expr> <TAB>
         \ pumvisible() ? "\<C-n>" :
         \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -248,6 +264,10 @@ augroup coc_setup
       call CocAction('doHover')
     endif
   endfunction
+
+  " Use `[g` and `]g` to navigate diagnostics
+  nmap <silent> [g <Plug>(coc-diagnostic-prev)
+  nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
   " Remap keys for gotos
   nmap <silent> gd <Plug>(coc-definition)
