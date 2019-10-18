@@ -69,6 +69,7 @@ augroup vimrc
       call lightline#init()
       call lightline#colorscheme()
       call lightline#update()
+      call SaveTmuxline()
       redraw!
     endfunction
   endif
