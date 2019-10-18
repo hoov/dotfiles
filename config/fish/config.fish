@@ -11,9 +11,10 @@ else
     set __fish_git_prompt_char_cleanstate '♦'
     set __fish_git_prompt_color_branch '5FD7FF'
 
-    # We'll take care of it ourselves...
-    set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 end
+
+# We'll take care of it ourselves...
+set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 
 # Prefer /usr/local/bin and /usr/local/sbin
 set PATH /usr/local/bin /usr/local/sbin $PATH

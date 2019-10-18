@@ -64,16 +64,19 @@ sudo -v
 install_system_packages() {
   local -a packages
   packages=(cmake
+        apt-file
         apt-transport-https
         asciidoc
         aspell
         ca-certificates
         curl
+        dnsutils
         fish
         fontconfig
         fonts-powerline
         fuse
         fzf
+        gawk
         gettext-base
         gnupg2
         gperf

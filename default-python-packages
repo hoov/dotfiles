@@ -19,5 +19,6 @@ flake8-bandit ~= 2.1.1
 flake8-bugbear ~= 19.8.0; python_version >= '3.5'
 pep8-naming ~= 0.8.2
 
-# Langauge servers
-vim-vint ~= 0.3.21
+# Langauge server stuff
+# vint 0.3.21 can't deal with stdin
+git+https://github.com/Kuniwak/vint

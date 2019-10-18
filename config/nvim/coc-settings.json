@@ -1,8 +1,8 @@
 {
   "diagnostic-languageserver.filetypes": {
-    "sh": "shellcheck",
-    "vim": "vint"
+    "sh": "shellcheck"
   },
+  "diagnostic.checkCurrentLine": true,
   "diagnostic.displayByAle": false,
   "languageserver": {
     "bash": {
@@ -32,22 +32,31 @@
         "linters": {
           "vint": {
             "args": [
+              "--style-problem",
               "--enable-neovim",
+              "--format",
+              "{file_path}:{line_number}:{column_number}:{severity}: {description} (see {reference})",
               "-"
             ],
             "command": "vint",
             "debounce": 100,
             "formatLines": 1,
             "formatPattern": [
-              "[^:]+:(\\d+):(\\d+):\\s*(.*$)",
+              "[^:]+:(\\d+):(\\d+):([^:]+):\\s*(.*$)",
               {
                 "column": 2,
                 "line": 1,
-                "message": 3
+                "message": 4,
+                "security": 3
               }
             ],
             "offsetColumn": 0,
             "offsetLine": 0,
+            "securities": {
+              "error": "error",
+              "style_problem": "info",
+              "warning": "warning"
+            },
             "sourceName": "vint"
           }
         }

@@ -36,6 +36,7 @@ asdf plugin-add nodejs 2> /dev/null
 bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring 2> /dev/null
 
 asdf install > /dev/null 2>&1
+asdf reshim python
 
 # Rust setup
 rustup update

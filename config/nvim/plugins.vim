@@ -83,7 +83,7 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:ale_linters = { 'javascript': ['standard'],
                     \ 'rust': [],
                     \ 'sh': [],
-                    \ 'vim': ['vint']}
+                    \ 'vim': []}
 " This makes things work with asdf
 let g:ale_python_flake8_executable = 'python'
 let g:ale_python_flake8_options = '-m flake8'
@@ -93,13 +93,12 @@ let g:ale_rust_cargo_use_clippy = executable("cargo-clippy")
 
 " edkolev/tmuxline.vim
 let g:tmuxline_preset = {
-      \ 'a': '  #S',
-      \ 'b': '%R',
+      \ 'a': '  #S',
       \ 'win': [ '#I', '#W'],
       \ 'cwin': [ '#I', '#W', '#F'],
       \ 'x': [ '#{sysstat_cpu} #{cpu.color}#{cpu.pused}', '  #{cpu_fg_color}#{cpu_percentage} #{cpu_icon}' ],
-      \ 'y': '  %a %b %e %I:%M %P',
-      \ 'z': '  #H'
+      \ 'y': [ ' ', '%a', '%b %e %I:%M %P' ],
+      \ 'z': ['  ', '#{public_ip}', '#H']
       \ }
 let g:tmuxline_separators = {
       \ 'left': '',
@@ -110,6 +109,10 @@ let g:tmuxline_separators = {
       \ }
 
 function! SaveTmuxline() abort
+  if !strlen($TMUX) || !executable('tmux')
+    return
+  endif
+
   Tmuxline lightline
   TmuxlineSnapshot! ~/.tmux/gruvbox.conf
   silent execute '!tmux source-file ~/.tmux.conf'
@@ -124,9 +127,25 @@ let g:terraform_fmt_on_save=1
 " itchyny/lightline.vim
 set showtabline=2
 
+function! Devicons_Fileformat() abort
+    return winwidth(0) > 70 ? (WebDevIconsGetFileFormatSymbol().'  '.&fileencoding.'['.&fileformat.']' ) : ''
+endfunction"
+
 let g:lightline = {}
 let g:lightline.separator = { 'left': '', 'right': '' }
 let g:lightline.subseparator = { 'left': ' ', 'right': ' ' }
+
+let g:lightline.active = {
+      \ 'left': [ ['artify_mode', 'paste'],
+      \           ['readonly', 'filename', 'modified'],
+      \           ['devicons_fileformat'] ],
+      \ 'right': [['lineinfo'], ['percent'], ['coc_status', 'filetype']]
+      \ }
+let g:lightline.inactive = {
+      \ 'left': [['filename']],
+      \ 'right': [['lineinfo'], ['percent']]
+      \ }
+
 let g:lightline.tabline_separator = { 'left': '', 'right': '' }
 let g:lightline.tabline_subseparator = { 'left': ' ', 'right': ' ' }
 let g:lightline.tabline = {
@@ -134,17 +153,20 @@ let g:lightline.tabline = {
       \ 'right': [ [ 'artify_gitbranch' ],
       \ [ 'gitdiff' ] ]
       \ }
-
 " Expansions
 let g:lightline.component = {
+      \ 'lineinfo': ' %3l:%-2v',
+      \ 'percent': '%3p%%',
       \ 'vim_logo': " "
       \ }
 let g:lightline.component_function = {
       \ 'artify_gitbranch': 'Artify_gitbranch',
-      \ 'artify_mode': 'Artify_lightline_mode}'
+      \ 'artify_mode': 'Artify_lightline_mode',
+      \ 'devicons_fileformat': 'Devicons_Fileformat'
       \ }
 let g:lightline.component_expand = {
       \ 'buffers': 'lightline#bufferline#buffers',
+      \ 'coc_status': 'coc#status',
       \ 'gitdiff': 'lightline#gitdiff#get'
       \ }
 let g:lightline.component_type = {
@@ -236,6 +258,13 @@ augroup coc_setup
   end
 
   set updatetime=300
+
+  highlight! link CocErrorSign ALEErrorSign
+  highlight! link CocWarningSign ALEWarningSign
+  highlight! link CocInfoSign ALEInfoSign
+  highlight! link CocErrorHighlight ALEError
+  highlight! link CocWarningHighlight ALEWarning
+  highlight! link CocInfoHighlight ALEInfo
 
   let g:coc_enable_locationlist=1
   inoremap <silent><expr> <TAB>
