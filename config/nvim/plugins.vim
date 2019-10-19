@@ -21,6 +21,7 @@ call minpac#add('junegunn/fzf.vim')
 call minpac#add('kchmck/vim-coffee-script')
 call minpac#add('kshenoy/vim-signature')
 call minpac#add('majutsushi/tagbar')
+call minpac#add('mcchrish/extend-highlight.vim') " This is one I can/should write better: synIDattr(synIDtrans(hlID(...
 call minpac#add('mengelbrecht/lightline-bufferline')
 call minpac#add('niklaas/lightline-gitdiff')
 call minpac#add('raimon49/requirements.txt.vim')
@@ -139,7 +140,7 @@ let g:lightline.active = {
       \ 'left': [ ['artify_mode', 'paste'],
       \           ['readonly', 'filename', 'modified'],
       \           ['devicons_fileformat'] ],
-      \ 'right': [['lineinfo'], ['percent'], ['coc_status', 'filetype']]
+      \ 'right': [['lineinfo'], ['percent'], ['filetype']]
       \ }
 let g:lightline.inactive = {
       \ 'left': [['filename']],
@@ -210,6 +211,11 @@ nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit = 1
 
+" ryanoasis/vim-devicons
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+
+
 " sainnhe/artify.vim
 function! Artify_lightline_mode() abort
     return Artify(lightline#mode(), 'monospace')
@@ -226,6 +232,12 @@ endfunction
 " scrooloose/nerdtree
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeDirArrows = 0
+
+" This comes from https://github.com/scrooloose/nerdtree/issues/904. It'll
+" make arrows invisible since we're using devicons anyway
+let g:NERDTreeDirArrowExpandable = "\u00a0"
+let g:NERDTreeDirArrowCollapsible = "\u00a0"
+let g:NERDTreeNodeDelimiter = "\u263a" " smiley face -- character doesn't matter
 
 nmap <Leader>n :NERDTreeToggle<CR>
 nmap <Leader>N :NERDTreeFind<CR>
@@ -259,12 +271,34 @@ augroup coc_setup
 
   set updatetime=300
 
-  highlight! link CocErrorSign ALEErrorSign
-  highlight! link CocWarningSign ALEWarningSign
-  highlight! link CocInfoSign ALEInfoSign
-  highlight! link CocErrorHighlight ALEError
-  highlight! link CocWarningHighlight ALEWarning
-  highlight! link CocInfoHighlight ALEInfo
+  " Ideas for status glyphs
+  "                  
+  function! s:post_coc_init()
+    highlight! CocUnderline cterm=undercurl gui=undercurl
+    highlight! link CocErrorSign ALEErrorSign
+    highlight! link CocWarningSign ALEWarningSign
+    highlight! link CocInfoSign ALEInfoSign
+    highlight! link CocHintSign GruvboxPurpleSign
+
+    highlight! link CocErrorHighlight ALEError
+    highlight! link CocWarningHighlight ALEWarning
+    highlight! link CocInfoHighlight ALEInfo
+    " FIXME: This'll break if we ever switch away from gruvbox
+    highlight! CocHintHighlight cterm=undercurl gui=undercurl guisp=#d3869b
+
+    highlight! link CocErrorVirtualText ALEVirtualTextError
+    highlight! link CocWarningVirtualText ALEVirtualTextWarning
+    highlight! link CocInfoVirtualText ALEVirtualTextInfo
+    highlight! link CocHintVirtualText GruvboxPurple
+
+    highlight! link CocErrorFloat ALEVirtualTextError
+    highlight! link CocWarningFloat ALEVirtualTextWarning
+    highlight! link CocInfoFloat ALEVirtualTextInfo
+    highlight! link CocHintFloat GruvboxPurple
+  endfunction
+  
+  autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+  autocmd User CocNvimInit call s:post_coc_init()
 
   let g:coc_enable_locationlist=1
   inoremap <silent><expr> <TAB>
