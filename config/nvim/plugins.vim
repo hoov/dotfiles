@@ -135,6 +135,55 @@ function! Devicons_Fileformat() abort
     return winwidth(0) > 70 ? (WebDevIconsGetFileFormatSymbol().'  '.&fileencoding.'['.&fileformat.']' ) : ''
 endfunction"
 
+" Ideas for status glyphs
+"                  
+" TODO: I think I want to break this out into seperate functions so that I can
+" highlight different sections in the lightline, but I need to figure out how
+" to cache the info so we don't do all this nonesence too often
+function! DiagnosticStatus() abort
+  let l:coc_info = get(b:, 'coc_diagnostic_info', {})
+  let l:ale_info = {}
+
+  if get(g:, 'ale_info', 1)
+    let l:ale_info = ale#statusline#Count(bufnr(''))
+  endif
+
+  if empty(l:coc_info) || empty(l:ale_info)
+    return ''
+  endif
+
+  let l:msgs = []
+
+  " Taking the levels from coc and smooshing in ALE to fit
+  let l:num_error = get(l:coc_info, 'error', 0) + get(l:ale_info, 'error', 0)
+  let l:num_warning = get(l:coc_info, 'warning', 0) 
+        \ + get(l:ale_info, 'warn', 0)
+        \ + get(l:ale_info, 'style_error', 0)
+        \ + get(l:ale_info, 'style_warning', 0)
+  let l:num_info = get(l:coc_info, 'information', 0) + get(l:ale_info, 'info', 0)
+  let l:num_hint = get(l:coc_info, 'hint', 0)
+
+  if l:num_error
+    call add(l:msgs, '  ' . l:num_error)
+  endif
+
+  if l:num_warning
+    call add(l:msgs, '  ' . l:num_warning)
+  endif
+
+  if l:num_info
+    call add(l:msgs, '  ' . l:num_info)
+  endif
+
+  if l:num_hint
+    call add(l:msgs, '  ' . l:num_hint)
+  endif
+
+  call add(l:msgs, get(g:, 'coc_status', ''))
+
+  return join(l:msgs, ' ')
+endfunction
+
 let g:lightline = {}
 let g:lightline.separator = { 'left': '', 'right': '' }
 let g:lightline.subseparator = { 'left': ' ', 'right': ' ' }
@@ -143,7 +192,7 @@ let g:lightline.active = {
       \ 'left': [ ['artify_mode', 'paste'],
       \           ['readonly', 'filename', 'modified'],
       \           ['devicons_fileformat'] ],
-      \ 'right': [['lineinfo'], ['percent'], ['filetype']]
+      \ 'right': [['lineinfo'], ['percent'], ['diagnostic_status', 'filetype']]
       \ }
 let g:lightline.inactive = {
       \ 'left': [['filename']],
@@ -159,18 +208,18 @@ let g:lightline.tabline = {
       \ }
 " Expansions
 let g:lightline.component = {
-      \ 'lineinfo': '  %3l:%-2v',
+      \ 'lineinfo': ' %3l:%-2v',
       \ 'percent': '%3p%%',
-      \ 'vim_logo': " "
+      \ 'vim_logo': ' '
       \ }
 let g:lightline.component_function = {
       \ 'artify_gitbranch': 'Artify_gitbranch',
       \ 'artify_mode': 'Artify_lightline_mode',
-      \ 'devicons_fileformat': 'Devicons_Fileformat'
+      \ 'devicons_fileformat': 'Devicons_Fileformat',
+      \ 'diagnostic_status': 'DiagnosticStatus'
       \ }
 let g:lightline.component_expand = {
       \ 'buffers': 'lightline#bufferline#buffers',
-      \ 'coc_status': 'coc#status',
       \ 'gitdiff': 'lightline#gitdiff#get'
       \ }
 let g:lightline.component_type = {
@@ -262,7 +311,7 @@ endfunction
 
 function! Artify_gitbranch() abort
   if FugitiveHead() !=# ''
-    return Artify(FugitiveHead(), 'monospace')."  "
+    return Artify(FugitiveHead(), 'monospace').'  '
   else
     return "\ue61b "
   endif
@@ -280,18 +329,31 @@ let g:NERDTreeNodeDelimiter = "\u263a" " smiley face -- character doesn't matter
 
 nmap <Leader>n :NERDTreeToggle<CR>
 nmap <Leader>N :NERDTreeFind<CR>
+
+function! s:CloseIfOnlyWindow() abort
+  if winnr('$') != 1
+    return
+  endif
+
+  if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1 || &buftype ==# 'quickfix')
+    quit
+  endif
+endfunction
+
+
 " If vim is opened without a file specified, open NERDTree
-augroup nerdtree_stdin
+augroup nerdtree_custom
   autocmd!
   autocmd StdinReadPre * let s:std_in=1
   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+  autocmd BufEnter * call s:CloseIfOnlyWindow()
 augroup END
 
 " yggdroot/indentline
 let g:indentLine_char = '¦'
 " This plugin might be more trouble than it's worth. This makes json behave
 " sanely
-let g:indentLine_concealcursor=""
+let g:indentLine_concealcursor=''
 
 " Autocomplete configuration
 
@@ -310,36 +372,7 @@ augroup coc_setup
 
   set updatetime=300
 
-  " Ideas for status glyphs
-  "                  
-  let g:coc_status_error_sign="  "
-  let g:coc_status_warning_sign="  "
-  function! s:post_coc_init()
-    highlight! CocUnderline cterm=undercurl gui=undercurl
-    highlight! link CocErrorSign ALEErrorSign
-    highlight! link CocWarningSign ALEWarningSign
-    highlight! link CocInfoSign ALEInfoSign
-    highlight! link CocHintSign GruvboxPurpleSign
-
-    highlight! link CocErrorHighlight ALEError
-    highlight! link CocWarningHighlight ALEWarning
-    highlight! link CocInfoHighlight ALEInfo
-    " FIXME: This'll break if we ever switch away from gruvbox
-    highlight! CocHintHighlight cterm=undercurl gui=undercurl guisp=#d3869b
-
-    highlight! link CocErrorVirtualText ALEVirtualTextError
-    highlight! link CocWarningVirtualText ALEVirtualTextWarning
-    highlight! link CocInfoVirtualText ALEVirtualTextInfo
-    highlight! link CocHintVirtualText GruvboxPurple
-
-    highlight! link CocErrorFloat ALEVirtualTextError
-    highlight! link CocWarningFloat ALEVirtualTextWarning
-    highlight! link CocInfoFloat ALEVirtualTextInfo
-    highlight! link CocHintFloat GruvboxPurple
-  endfunction
-  
   autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
-  autocmd User CocNvimInit call s:post_coc_init()
 
   let g:coc_enable_locationlist=1
   inoremap <silent><expr> <TAB>
@@ -437,6 +470,32 @@ function! s:gruvbox_customize() abort
         \ 'spinner': ['fg', 'GruvboxYellow'],
         \ 'header': ['fg', 'GruvboxBg3']
         \ }
+
+  if has('nvim-0.4')
+    highlight! PmenuSel blend=0
+  endif
+
+  highlight! CocUnderline cterm=undercurl gui=undercurl
+  highlight! link CocErrorSign ALEErrorSign
+  highlight! link CocWarningSign ALEWarningSign
+  highlight! link CocInfoSign ALEInfoSign
+  highlight! link CocHintSign GruvboxPurpleSign
+
+  highlight! link CocErrorHighlight ALEError
+  highlight! link CocWarningHighlight ALEWarning
+  highlight! link CocInfoHighlight ALEInfo
+  " FIXME: This'll break if we ever switch away from gruvbox
+  highlight! CocHintHighlight cterm=undercurl gui=undercurl guisp=#d3869b
+
+  highlight! link CocErrorVirtualText ALEVirtualTextError
+  highlight! link CocWarningVirtualText ALEVirtualTextWarning
+  highlight! link CocInfoVirtualText ALEVirtualTextInfo
+  highlight! link CocHintVirtualText GruvboxPurple
+
+  highlight! link CocErrorFloat ALEVirtualTextError
+  highlight! link CocWarningFloat ALEVirtualTextWarning
+  highlight! link CocInfoFloat ALEVirtualTextInfo
+  highlight! link CocHintFloat GruvboxPurple
 endfunction
 
 augroup on_change_colorscheme
