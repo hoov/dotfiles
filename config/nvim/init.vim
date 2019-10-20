@@ -24,8 +24,13 @@ set colorcolumn=120
 
 set clipboard+=unnamedplus
 
-set wildmode=list:longest
+set wildmenu
+set wildmode=list:longest,full
 set wildignore+=*.o,*.obj,.git,*.pyc
+
+if has('nvim')
+  set wildoptions=pum
+endif
 
 set scrolloff=3
 set ignorecase
@@ -58,7 +63,8 @@ augroup vimrc
   " Only highlight current lines when window has focus
   autocmd WinEnter,InsertLeave * set cursorline
   autocmd WinLeave,InsertEnter * set nocursorline
-  autocmd FileType gitconfig,javascript,json,ruby,terraform,vim,yaml setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=2
+  autocmd FileType gitconfig,javascript,json,ruby,terraform,typescript,vim,yaml
+        \ setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=2
 
   " Reloads vimrc after saving but keep cursor position
   if !exists('*ReloadVimrc')
