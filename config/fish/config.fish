@@ -87,7 +87,7 @@ end
 
 if command -sq rg
     set -U FZF_FIND_FILE_COMMAND "rg --files --no-ignore-vcs --hidden \$dir 2> /dev/null"
-    set -U FZF_DEFAULT_COMMAND  'rg --files --no-ignore-vcs --hidden'
+    set -U FZF_DEFAULT_COMMAND  "rg --files --no-ignore-vcs --hidden"
 else
     set -e FZF_FIND_FILE_COMMAND
     set -e FZF_DEFAULT_COMMAND
@@ -117,14 +117,13 @@ end
 alias lla="ls -lha"
 
 if command -sq nvim.appimage
-    set -gx EDITOR nvim.appimage
     alias vim=nvim.appimage
 else if command -sq nvim
-    set -gx EDITOR nvim
     alias vim=nvim
 else
     set -gx EDITOR vim
 end
+set -gx EDITOR vim
 
 if status --is-interactive
     base16-gruvbox-dark-medium
