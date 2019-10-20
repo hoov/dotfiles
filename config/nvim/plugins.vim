@@ -44,7 +44,7 @@ call minpac#add('yggdroot/indentline')
 
 " Autocomplete plugins
 call minpac#add('Shougo/neco-vim')
-call minpac#add('neoclide/coc-neco')
+call minpac#add('hoov/coc-neco')
 
 let g:coc_global_extensions = [
       \ 'coc-diagnostic',
@@ -90,7 +90,7 @@ let g:ale_python_flake8_executable = 'python'
 let g:ale_python_flake8_options = '-m flake8'
 let g:ale_sh_language_server_use_global = 1
 
-let g:ale_rust_cargo_use_clippy = executable("cargo-clippy")
+let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 
 " edkolev/tmuxline.vim
 let g:tmuxline_preset = {
@@ -156,7 +156,7 @@ let g:lightline.tabline = {
       \ }
 " Expansions
 let g:lightline.component = {
-      \ 'lineinfo': ' %3l:%-2v',
+      \ 'lineinfo': '  %3l:%-2v',
       \ 'percent': '%3p%%',
       \ 'vim_logo': " "
       \ }
@@ -181,6 +181,39 @@ let g:rg_highlight = 1
 
 " junegunn/fzf
 nnoremap <Leader>o :Files<CR>
+
+" Reverse the layout to make the FZF list top-down
+let $FZF_DEFAULT_OPTS='--layout=reverse'
+
+" Using the custom window creation function
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+" Function to create the custom floating window
+function! FloatingFZF()
+  " creates a scratch, unlisted, new, empty, unnamed buffer
+  " to be used in the floating window
+  let buf = nvim_create_buf(v:false, v:true)
+
+  " 90% of the height
+  let height = float2nr(&lines * 0.9)
+  " 60% of the height
+  let width = float2nr(&columns * 0.6)
+  " horizontal position (centralized)
+  let horizontal = float2nr((&columns - width) / 2)
+  " vertical position (one line down of the top)
+  let vertical = 1
+
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height
+        \ }
+
+  " open the new window, floating, and enter to it
+  call nvim_open_win(buf, v:true, opts)
+endfunction
 
 " majutsushi/tagbar
 nmap <F8> :TagbarToggle<CR>
@@ -273,6 +306,8 @@ augroup coc_setup
 
   " Ideas for status glyphs
   "                  
+  let g:coc_status_error_sign="  "
+  let g:coc_status_warning_sign="  "
   function! s:post_coc_init()
     highlight! CocUnderline cterm=undercurl gui=undercurl
     highlight! link CocErrorSign ALEErrorSign

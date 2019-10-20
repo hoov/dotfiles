@@ -43,7 +43,7 @@ set listchars=tab:▸\ ,eol:¬,trail:·,extends:⟫,precedes:⟪,nbsp:␣
 
 set undofile
 
-function! SetExecutableBit()
+function! s:SetExecutableBit()
   let l:fname = expand('%:p')
   checktime
   execute 'au FileChangedShell ' . l:fname . ' :echo'
@@ -51,7 +51,7 @@ function! SetExecutableBit()
   checktime
   execute 'au! FileChangedShell ' . l:fname
 endfunction
-command! Xbit call SetExecutableBit()
+command! Xbit call s:SetExecutableBit()
 
 augroup vimrc
   autocmd!

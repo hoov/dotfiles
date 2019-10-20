@@ -2,6 +2,10 @@
   "diagnostic-languageserver.filetypes": {
     "sh": "shellcheck"
   },
+  "diagnostic.errorSign": "•",
+  "diagnostic.warningSign":"•",
+  "diagnostic.infoSign":"•",
+  "diagnostic.hintSign":"•",
   "diagnostic.checkCurrentLine": true,
   "diagnostic.displayByAle": false,
   "languageserver": {
