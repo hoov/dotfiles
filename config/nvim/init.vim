@@ -28,8 +28,10 @@ set wildmenu
 set wildmode=list:longest,full
 set wildignore+=*.o,*.obj,.git,*.pyc
 
-if has('nvim')
+if has('nvim-0.4')
   set wildoptions=pum
+  set winblend=10
+  set pumblend=10
 endif
 
 set scrolloff=3
