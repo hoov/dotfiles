@@ -39,12 +39,13 @@ call minpac#add('tpope/vim-projectionist')
 call minpac#add('tpope/vim-rails')
 call minpac#add('tpope/vim-rake')
 call minpac#add('tpope/vim-repeat')
+call minpac#add('tpope/vim-scriptease')
 call minpac#add('tpope/vim-surround')
 call minpac#add('yggdroot/indentline')
 
 " Autocomplete plugins
 call minpac#add('Shougo/neco-vim')
-call minpac#add('hoov/coc-neco')
+call minpac#add('hoov/coc-neco') " Take my fork until my PR makes it in
 
 let g:coc_global_extensions = [
       \ 'coc-diagnostic',
@@ -52,7 +53,8 @@ let g:coc_global_extensions = [
       \ 'coc-json',
       \ 'coc-python',
       \ 'coc-rls',
-      \ 'coc-snippets'
+      \ 'coc-snippets',
+      \ 'coc-tsserver'
       \ ]
 
 call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
@@ -84,6 +86,7 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:ale_linters = { 'javascript': ['standard'],
                     \ 'rust': [],
                     \ 'sh': [],
+                    \ 'typescript': [],
                     \ 'vim': []}
 " This makes things work with asdf
 let g:ale_python_flake8_executable = 'python'
@@ -194,26 +197,29 @@ function! FloatingFZF()
   " to be used in the floating window
   let buf = nvim_create_buf(v:false, v:true)
 
-  " 90% of the height
-  let height = float2nr(&lines * 0.9)
+  " 50% of the height
+  let height = float2nr(&lines * 0.5)
   " 60% of the height
   let width = float2nr(&columns * 0.6)
   " horizontal position (centralized)
   let horizontal = float2nr((&columns - width) / 2)
   " vertical position (one line down of the top)
-  let vertical = 1
+  let vertical = float2nr((&lines - height) / 2)
 
   let opts = {
         \ 'relative': 'editor',
         \ 'row': vertical,
         \ 'col': horizontal,
         \ 'width': width,
-        \ 'height': height
+        \ 'height': height,
+        \ 'style': 'minimal'
         \ }
 
-  " open the new window, floating, and enter to it
-  call nvim_open_win(buf, v:true, opts)
+  " Tried setting colors here with nvim_win_set_option, but fzf overrides it.
+  " See the autocmd down at the bottom.
+  return nvim_open_win(buf, v:true, opts)
 endfunction
+
 
 " majutsushi/tagbar
 nmap <F8> :TagbarToggle<CR>
@@ -372,6 +378,7 @@ augroup coc_setup
   nmap <silent> gy <Plug>(coc-type-definition)
   nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
+  nmap <silent> gl <Plug>(coc-codelens-action)
 
   " Highlight symbol under cursor on CursorHold
   autocmd CursorHold * silent call CocActionAsync("highlight")
@@ -381,6 +388,10 @@ augroup coc_setup
   xmap af <Plug>(coc-funcobj-a)
   omap if <Plug>(coc-funcobj-i)
   omap af <Plug>(coc-funcobj-a)
+
+  " Remap for format selected region
+  xmap <leader>f  <Plug>(coc-format-selected)
+  nmap <leader>f  <Plug>(coc-format-selected)
 
   " Using CocList
   " Show all diagnostics
@@ -410,4 +421,27 @@ if has('termguicolors')
 endif
 
 let g:gruvbox_italic=1
+
+function! s:gruvbox_customize() abort
+  let g:fzf_colors = {
+        \ 'fg': ['fg', 'Pmenu'],
+        \ 'bg': ['bg', 'Pmenu'],
+        \ 'hl': ['fg', 'GruvboxYellow'],
+        \ 'fg+': ['fg', 'GruvboxFg1'],
+        \ 'bg+': ['bg', 'Pmenu'],
+        \ 'hl+': ['fg', 'GruvboxYellow'],
+        \ 'info': ['fg', 'GruvboxBlue'],
+        \ 'prompt': ['fg', 'GruvboxFg4'],
+        \ 'pointer': ['fg', 'GruvboxBlue'],
+        \ 'marker': ['fg', 'GruvboxOrange'],
+        \ 'spinner': ['fg', 'GruvboxYellow'],
+        \ 'header': ['fg', 'GruvboxBg3']
+        \ }
+endfunction
+
+augroup on_change_colorscheme
+  autocmd!
+  autocmd ColorScheme * call s:gruvbox_customize()
+augroup END
+
 colorscheme gruvbox

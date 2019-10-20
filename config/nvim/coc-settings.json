@@ -1,13 +1,14 @@
 {
+  "codeLens.enable": true,
   "diagnostic-languageserver.filetypes": {
     "sh": "shellcheck"
   },
-  "diagnostic.errorSign": "•",
-  "diagnostic.warningSign":"•",
-  "diagnostic.infoSign":"•",
-  "diagnostic.hintSign":"•",
   "diagnostic.checkCurrentLine": true,
   "diagnostic.displayByAle": false,
+  "diagnostic.errorSign": "•",
+  "diagnostic.hintSign": "•",
+  "diagnostic.infoSign": "•",
+  "diagnostic.warningSign": "•",
   "languageserver": {
     "bash": {
       "args": [
@@ -73,5 +74,7 @@
   ],
   "python.linting.flake8Enabled": true,
   "python.linting.flake8Path": "~/.asdf/shims/python",
-  "suggest.preferCompleteThanJumpPlaceholder": true
+  "suggest.preferCompleteThanJumpPlaceholder": true,
+  "suggest.timeout": 5000,
+  "tsserver.reportStyleChecksAsWarnings": false
 }
