@@ -6,7 +6,6 @@ call minpac#init()
 
 " minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
 call minpac#add('k-takata/minpac', {'type': 'opt'})
-call minpac#add('airblade/vim-gitgutter') " I guess this is better than signify?
 call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
 call minpac#add('dag/vim-fish') " This is super old, but the one most commonly used
@@ -14,6 +13,7 @@ call minpac#add('dense-analysis/ale')
 call minpac#add('edkolev/tmuxline.vim')
 call minpac#add('elzr/vim-json')
 call minpac#add('hashivim/vim-terraform')
+call minpac#add('HerringtonDarkholme/yats.vim')
 call minpac#add('itchyny/lightline.vim')
 call minpac#add('jremmen/vim-ripgrep') " Ships with neovim, but take a later version
 call minpac#add('junegunn/fzf')
@@ -23,7 +23,6 @@ call minpac#add('kshenoy/vim-signature')
 call minpac#add('majutsushi/tagbar')
 call minpac#add('mcchrish/extend-highlight.vim') " This is one I can/should write better: synIDattr(synIDtrans(hlID(...
 call minpac#add('mengelbrecht/lightline-bufferline')
-call minpac#add('niklaas/lightline-gitdiff')
 call minpac#add('raimon49/requirements.txt.vim')
 call minpac#add('rodjek/vim-puppet')
 call minpac#add('rust-lang/rust.vim')
@@ -31,7 +30,6 @@ call minpac#add('ryanoasis/vim-devicons')
 call minpac#add('sainnhe/artify.vim')
 call minpac#add('saltstack/salt-vim')
 call minpac#add('scrooloose/nerdtree')
-"call minpac#add('SirVer/ultisnips')
 call minpac#add('tmux-plugins/vim-tmux')
 call minpac#add('tpope/vim-bundler')
 call minpac#add('tpope/vim-fugitive')
@@ -50,10 +48,12 @@ call minpac#add('hoov/coc-neco') " Take my fork until my PR makes it in
 let g:coc_global_extensions = [
       \ 'coc-diagnostic',
       \ 'coc-highlight',
+      \ 'coc-git',
       \ 'coc-json',
       \ 'coc-python',
       \ 'coc-rls',
       \ 'coc-snippets',
+      \ 'coc-syntax',
       \ 'coc-tsserver'
       \ ]
 
@@ -73,27 +73,24 @@ command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 
 " Plugin configuration
 
-" airblade/vim-gitgutter
-let g:gitgutter_sign_allow_clobber = 1
-let g:gitgutter_override_sign_column_highlight = 0
-nnoremap <leader>g :GitGutterLineHighlightsToggle<CR>
-
 " dense-analysis/ale
 let g:ale_open_list = 0
+" TODO: Combine this with Coc diagnostics somehow
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 " Disable certain linters that coc takes care of
 let g:ale_linters = { 'javascript': ['standard'],
                     \ 'rust': [],
+                    \ 'python': [],
                     \ 'sh': [],
                     \ 'typescript': [],
                     \ 'vim': []}
-" This makes things work with asdf
-let g:ale_python_flake8_executable = 'python'
-let g:ale_python_flake8_options = '-m flake8'
 let g:ale_sh_language_server_use_global = 1
 
 let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
+
+let g:ale_sign_error = '•'
+let g:ale_sign_warning = '•'
 
 " edkolev/tmuxline.vim
 let g:tmuxline_preset = {
@@ -140,59 +137,96 @@ endfunction"
 " TODO: I think I want to break this out into seperate functions so that I can
 " highlight different sections in the lightline, but I need to figure out how
 " to cache the info so we don't do all this nonesence too often
-function! DiagnosticStatus() abort
+
+function! s:UpdateDiagnosticStatus() abort
   let l:coc_info = get(b:, 'coc_diagnostic_info', {})
   let l:ale_info = {}
 
-  if get(g:, 'ale_info', 1)
+  if get(g:, 'ale_enabled', 1)
     let l:ale_info = ale#statusline#Count(bufnr(''))
   endif
 
-  if empty(l:coc_info) || empty(l:ale_info)
-    return ''
+  if empty(l:coc_info) && empty(l:ale_info)
+    let b:diagnostic_info = {}
   endif
 
-  let l:msgs = []
+  let l:diagnostic_info = {}
 
   " Taking the levels from coc and smooshing in ALE to fit
-  let l:num_error = get(l:coc_info, 'error', 0) + get(l:ale_info, 'error', 0)
-  let l:num_warning = get(l:coc_info, 'warning', 0) 
+  let l:diagnostic_info.error = get(l:coc_info, 'error', 0) + get(l:ale_info, 'error', 0)
+  let l:diagnostic_info.warning = get(l:coc_info, 'warning', 0) 
         \ + get(l:ale_info, 'warn', 0)
         \ + get(l:ale_info, 'style_error', 0)
         \ + get(l:ale_info, 'style_warning', 0)
-  let l:num_info = get(l:coc_info, 'information', 0) + get(l:ale_info, 'info', 0)
-  let l:num_hint = get(l:coc_info, 'hint', 0)
+  let l:diagnostic_info.info = get(l:coc_info, 'information', 0) + get(l:ale_info, 'info', 0)
+  let l:diagnostic_info.hint = get(l:coc_info, 'hint', 0)
 
-  if l:num_error
-    call add(l:msgs, '  ' . l:num_error)
+  let b:diagnostic_info = l:diagnostic_info
+
+  call lightline#update()
+endfunction
+
+function! s:FormatDiagnosticInfo(kind)
+  let l:symbols = {
+        \ 'error': ' ',
+        \ 'warning': ' ',
+        \ 'info': ' ',
+        \ 'hint': ' ',
+        \ }
+
+  let l:diagnostic_info = get(b:, 'diagnostic_info', {})
+
+  if empty(l:diagnostic_info)
+    return ''
   endif
 
-  if l:num_warning
-    call add(l:msgs, '  ' . l:num_warning)
+  let l:num = get(l:diagnostic_info, a:kind, 0)
+
+  if l:num == 0
+    return ''
   endif
 
-  if l:num_info
-    call add(l:msgs, '  ' . l:num_info)
-  endif
+  return get(l:symbols, a:kind) . ' ' . l:num
+endfunction
 
-  if l:num_hint
-    call add(l:msgs, '  ' . l:num_hint)
-  endif
+function! LightlineErrorCount() abort
+  return s:FormatDiagnosticInfo('error')
+endfunction
 
-  call add(l:msgs, get(g:, 'coc_status', ''))
+function! LightlineWarningCount() abort
+  return s:FormatDiagnosticInfo('warning')
+endfunction
 
-  return join(l:msgs, ' ')
+function! LightlineInfoCount() abort
+  return s:FormatDiagnosticInfo('info')
+endfunction
+
+function! LightlineHintCount() abort
+  return s:FormatDiagnosticInfo('hint')
+endfunction
+
+function! CocGitStatus() abort
+  return get(b:, 'coc_git_status', '')
+endfunction
+
+function! CocStatus() abort
+  return get(g:, 'coc_status', '')
 endfunction
 
 let g:lightline = {}
+let g:lightline.colorscheme='gruvbox'
 let g:lightline.separator = { 'left': '', 'right': '' }
 let g:lightline.subseparator = { 'left': ' ', 'right': ' ' }
 
+" coc_status and filetype are in the *wrong* order, but they render in the
+" order that I want them. No clue what's going on.
 let g:lightline.active = {
-      \ 'left': [ ['artify_mode', 'paste'],
-      \           ['readonly', 'filename', 'modified'],
-      \           ['devicons_fileformat'] ],
-      \ 'right': [['lineinfo'], ['percent'], ['diagnostic_status', 'filetype']]
+      \ 'left': [['artify_mode', 'paste'],
+      \          ['readonly', 'filename', 'modified'],
+      \          ['devicons_fileformat']],
+      \ 'right': [['lineinfo'],
+      \           ['percent'],
+      \           ['coc_status', 'filetype', 'error_count', 'warning_count', 'info_count', 'hint_count']]
       \ }
 let g:lightline.inactive = {
       \ 'left': [['filename']],
@@ -204,7 +238,7 @@ let g:lightline.tabline_subseparator = { 'left': ' ', 'right': ' ' }
 let g:lightline.tabline = {
       \ 'left': [ [ 'vim_logo', 'buffers' ] ],
       \ 'right': [ [ 'artify_gitbranch' ],
-      \ [ 'gitdiff' ] ]
+      \ [ 'coc_git_status' ] ]
       \ }
 " Expansions
 let g:lightline.component = {
@@ -215,27 +249,34 @@ let g:lightline.component = {
 let g:lightline.component_function = {
       \ 'artify_gitbranch': 'Artify_gitbranch',
       \ 'artify_mode': 'Artify_lightline_mode',
+      \ 'coc_git_status': 'CocGitStatus',
       \ 'devicons_fileformat': 'Devicons_Fileformat',
       \ 'diagnostic_status': 'DiagnosticStatus'
       \ }
 let g:lightline.component_expand = {
       \ 'buffers': 'lightline#bufferline#buffers',
-      \ 'gitdiff': 'lightline#gitdiff#get'
+      \ 'coc_status': 'CocStatus',
+      \ 'error_count': 'LightlineErrorCount',
+      \ 'warning_count': 'LightlineWarningCount',
+      \ 'info_count': 'LightlineInfoCount',
+      \ 'hint_count': 'LightlineHintCount'
       \ }
 let g:lightline.component_type = {
-      \ 'buffers':  'tabsel'
+      \ 'buffers':  'tabsel',
+      \ 'error_count': 'error',
+      \ 'warning_count': 'warning'
       \ }
 "
 " jremmen/vim-ripgrep
-map <Leader>r <Esc>:Rg<CR>
-map <Leader>R <Esc>:Rg 
+nnoremap <Leader>r <Esc>:Rg<CR>
+nnoremap <Leader>R <Esc>:Rg 
 let g:rg_highlight = 1
 
 " junegunn/fzf
 nnoremap <Leader>o :Files<CR>
 
 " Reverse the layout to make the FZF list top-down
-let $FZF_DEFAULT_OPTS='--layout=reverse'
+let $FZF_DEFAULT_OPTS='--layout=reverse --border'
 
 " Using the custom window creation function
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
@@ -269,27 +310,21 @@ function! FloatingFZF()
   return nvim_open_win(buf, v:true, opts)
 endfunction
 
-
 " majutsushi/tagbar
-nmap <F8> :TagbarToggle<CR>
-
-let g:lightline#gitdiff#separator = ' | '
-let g:lightline#gitdiff#indicator_added='+ '
-let g:lightline#gitdiff#indicator_deleted='- '
-let g:lightline#gitdiff#indicator_modified='~ '
+nnoremap <F8> :TagbarToggle<CR>
 
 " mengelbrecht/lightline-bufferline
-let g:lightline#bufferline#enable_devicons = 1
-let g:lightline#bufferline#unicode_symbols = 1
+let g:lightline#bufferline#enable_devicons = v:true
+let g:lightline#bufferline#unicode_symbols = v:true
 let g:lightline#bufferline#show_number = 2
-let g:lightline#bufferline#filename_modifier = ':t'
+let g:lightline#bufferline#filename_modifier = ':~:.'
 
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
 nmap <Leader>2 <Plug>lightline#bufferline#go(2)
 nmap <Leader>3 <Plug>lightline#bufferline#go(3)
 nmap <Leader>4 <Plug>lightline#bufferline#go(4)
 nmap <Leader>5 <Plug>lightline#bufferline#go(5)
-nmap <Leader>6 <Plug>lightline#bufferline#go(6) 
+nmap <Leader>6 <Plug>lightline#bufferline#go(6)
 nmap <Leader>7 <Plug>lightline#bufferline#go(7)
 nmap <Leader>8 <Plug>lightline#bufferline#go(8)
 nmap <Leader>9 <Plug>lightline#bufferline#go(9)
@@ -300,8 +335,8 @@ let g:rustfmt_autosave = 1
 let g:rustfmt_emit = 1
 
 " ryanoasis/vim-devicons
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
+let g:DevIconsEnableFoldersOpenClose = v:true
 
 
 " sainnhe/artify.vim
@@ -335,7 +370,7 @@ function! s:CloseIfOnlyWindow() abort
     return
   endif
 
-  if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1 || &buftype ==# 'quickfix')
+  if ((exists('b:NERDTree') && b:NERDTree.isTabTree()) || &buftype ==# 'quickfix')
     quit
   endif
 endfunction
@@ -372,7 +407,9 @@ augroup coc_setup
 
   set updatetime=300
 
-  autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+  autocmd User ALEJobStarted,AELintPost,ALEFixPost call s:UpdateDiagnosticStatus()
+  autocmd User CocStatusChange,CocDiagnosticChange call s:UpdateDiagnosticStatus()
+  autocmd User CocGitStatusChange call lightline#update()
 
   let g:coc_enable_locationlist=1
   inoremap <silent><expr> <TAB>
