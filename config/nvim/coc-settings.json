@@ -9,6 +9,12 @@
   "diagnostic.hintSign": "•",
   "diagnostic.infoSign": "•",
   "diagnostic.warningSign": "•",
+  "git.addedSign.hlGroup": "GitGutterAdd",
+  "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
+  "git.changedSign.hlGroup": "GitGutterChange",
+  "git.enableGutters": true,
+  "git.removedSign.hlGroup": "GitGutterDelete",
+  "git.topRemovedSign.hlGroup": "GitGutterDelete",
   "languageserver": {
     "bash": {
       "args": [
@@ -68,12 +74,17 @@
       }
     }
   },
+  "python.formatting.provider": "black",
+  // Microsoft's language server seems to be more responsive
+  "python.jediEnabled": false,
   "python.linting.flake8Args": [
     "-m",
     "flake8"
   ],
   "python.linting.flake8Enabled": true,
   "python.linting.flake8Path": "~/.asdf/shims/python",
+  "python.linting.lintOnSave": true,
+  "python.linting.pylintEnabled": false,
   "suggest.preferCompleteThanJumpPlaceholder": true,
   "suggest.timeout": 5000,
   "tsserver.reportStyleChecksAsWarnings": false
