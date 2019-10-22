@@ -12,8 +12,10 @@ call minpac#add('dag/vim-fish') " This is super old, but the one most commonly u
 call minpac#add('dense-analysis/ale')
 call minpac#add('edkolev/tmuxline.vim')
 call minpac#add('elzr/vim-json')
+call minpac#add('gisphm/vim-gitignore')
 call minpac#add('hashivim/vim-terraform')
 call minpac#add('HerringtonDarkholme/yats.vim')
+call minpac#add('honza/vim-snippets')
 call minpac#add('itchyny/lightline.vim')
 call minpac#add('jremmen/vim-ripgrep') " Ships with neovim, but take a later version
 call minpac#add('junegunn/fzf')
@@ -42,8 +44,6 @@ call minpac#add('tpope/vim-surround')
 call minpac#add('yggdroot/indentline')
 
 " Autocomplete plugins
-call minpac#add('Shougo/neco-vim')
-call minpac#add('hoov/coc-neco') " Take my fork until my PR makes it in
 
 let g:coc_global_extensions = [
       \ 'coc-diagnostic',
@@ -54,7 +54,8 @@ let g:coc_global_extensions = [
       \ 'coc-rls',
       \ 'coc-snippets',
       \ 'coc-syntax',
-      \ 'coc-tsserver'
+      \ 'coc-tsserver',
+      \ 'coc-vimlsp'
       \ ]
 
 call minpac#add('neoclide/coc.nvim', {'branch': 'release'})

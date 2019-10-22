@@ -17,7 +17,7 @@ set cursorline
 
 set hidden
 
-set foldcolumn=4
+set foldcolumn=0
 set foldlevel=100
 set number
 set colorcolumn=120

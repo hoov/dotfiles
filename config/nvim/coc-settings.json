@@ -85,6 +85,7 @@
   "python.linting.flake8Path": "~/.asdf/shims/python",
   "python.linting.lintOnSave": true,
   "python.linting.pylintEnabled": false,
+  "python.pythonPath":"~/.asdf/shims/python",
   "suggest.preferCompleteThanJumpPlaceholder": true,
   "suggest.timeout": 5000,
   "tsserver.reportStyleChecksAsWarnings": false
