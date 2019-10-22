@@ -17,7 +17,6 @@ call minpac#add('hashivim/vim-terraform')
 call minpac#add('HerringtonDarkholme/yats.vim')
 call minpac#add('honza/vim-snippets')
 call minpac#add('itchyny/lightline.vim')
-call minpac#add('jremmen/vim-ripgrep') " Ships with neovim, but take a later version
 call minpac#add('junegunn/fzf')
 call minpac#add('junegunn/fzf.vim')
 call minpac#add('kchmck/vim-coffee-script')
@@ -267,14 +266,15 @@ let g:lightline.component_type = {
       \ 'error_count': 'error',
       \ 'warning_count': 'warning'
       \ }
-"
-" jremmen/vim-ripgrep
-nnoremap <Leader>r <Esc>:Rg<CR>
-nnoremap <Leader>R <Esc>:Rg 
-let g:rg_highlight = 1
 
 " junegunn/fzf
-nnoremap <Leader>o :Files<CR>
+
+let g:fzf_command_prefix = 'Fzf'
+nnoremap <Leader>o :FzfGitFiles<CR>
+nnoremap <Leader>O :FzfFiles<CR>
+nnoremap <Leader>r :FzfRg<CR>
+nnoremap <Leader>R :FzfRg <C-R><C-W><CR>
+nnoremap <Leader>T :FzfTags<CR>
 
 " Reverse the layout to make the FZF list top-down
 let $FZF_DEFAULT_OPTS='--layout=reverse --border'
