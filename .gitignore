@@ -18,5 +18,8 @@ config/pulse
 config/wslu
 config/yarn/global/*
 
+# I've accidentally used ctags in the root before
+tags
+
 tmux/plugins/*
 !tmux/plugins/tpm/*
