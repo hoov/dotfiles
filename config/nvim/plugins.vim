@@ -44,15 +44,19 @@ call minpac#add('yggdroot/indentline')
 
 " Autocomplete plugins
 
+" Use tslint until eslint has all the features
 let g:coc_global_extensions = [
+      \ 'coc-css',
       \ 'coc-diagnostic',
       \ 'coc-highlight',
       \ 'coc-git',
       \ 'coc-json',
+      \ 'coc-prettier',
       \ 'coc-python',
       \ 'coc-rls',
       \ 'coc-snippets',
       \ 'coc-syntax',
+      \ 'coc-tslint-plugin',
       \ 'coc-tsserver',
       \ 'coc-vimlsp'
       \ ]
