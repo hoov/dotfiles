@@ -12,10 +12,11 @@ call minpac#add('dag/vim-fish') " This is super old, but the one most commonly u
 call minpac#add('dense-analysis/ale')
 call minpac#add('edkolev/tmuxline.vim')
 call minpac#add('elzr/vim-json')
+call minpac#add('gisphm/vim-gitignore')
 call minpac#add('hashivim/vim-terraform')
 call minpac#add('HerringtonDarkholme/yats.vim')
+call minpac#add('honza/vim-snippets')
 call minpac#add('itchyny/lightline.vim')
-call minpac#add('jremmen/vim-ripgrep') " Ships with neovim, but take a later version
 call minpac#add('junegunn/fzf')
 call minpac#add('junegunn/fzf.vim')
 call minpac#add('kchmck/vim-coffee-script')
@@ -42,19 +43,22 @@ call minpac#add('tpope/vim-surround')
 call minpac#add('yggdroot/indentline')
 
 " Autocomplete plugins
-call minpac#add('Shougo/neco-vim')
-call minpac#add('hoov/coc-neco') " Take my fork until my PR makes it in
 
+" Use tslint until eslint has all the features
 let g:coc_global_extensions = [
+      \ 'coc-css',
       \ 'coc-diagnostic',
       \ 'coc-highlight',
       \ 'coc-git',
       \ 'coc-json',
+      \ 'coc-prettier',
       \ 'coc-python',
       \ 'coc-rls',
       \ 'coc-snippets',
       \ 'coc-syntax',
-      \ 'coc-tsserver'
+      \ 'coc-tslint-plugin',
+      \ 'coc-tsserver',
+      \ 'coc-vimlsp'
       \ ]
 
 call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
@@ -266,14 +270,15 @@ let g:lightline.component_type = {
       \ 'error_count': 'error',
       \ 'warning_count': 'warning'
       \ }
-"
-" jremmen/vim-ripgrep
-nnoremap <Leader>r <Esc>:Rg<CR>
-nnoremap <Leader>R <Esc>:Rg 
-let g:rg_highlight = 1
 
 " junegunn/fzf
-nnoremap <Leader>o :Files<CR>
+
+let g:fzf_command_prefix = 'Fzf'
+nnoremap <Leader>o :FzfGitFiles<CR>
+nnoremap <Leader>O :FzfFiles<CR>
+nnoremap <Leader>r :FzfRg<CR>
+nnoremap <Leader>R :FzfRg <C-R><C-W><CR>
+nnoremap <Leader>T :FzfTags<CR>
 
 " Reverse the layout to make the FZF list top-down
 let $FZF_DEFAULT_OPTS='--layout=reverse --border'

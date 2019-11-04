@@ -1,4 +1,7 @@
+# Do we want to ignore the whole coc directory?
+config/coc/*
 config/configstore/update-notifier-npm.json
+config/dconf/user
 config/fish/fish_variables
 config/fish/functions/fisher.fish
 config/fish/local.d/
@@ -6,9 +9,17 @@ config/fisher/
 config/fisherman-plugins/completions/
 config/fisherman-plugins/conf.d/
 config/fisherman-plugins/functions/
-config/hub
 config/htop/htoprc
+config/hub
 config/kitty/local.conf
 config/nvim/.netrwhist
 config/nvim/pack/
+config/pulse
 config/wslu
+config/yarn/global/*
+
+# I've accidentally used ctags in the root before
+tags
+
+tmux/plugins/*
+!tmux/plugins/tpm/*
