@@ -55,13 +55,10 @@
   enabled = 1
 [status]
   submodulesummary = 1
-
 [include]
   path = ~/.gitconfig.local
-
 [includeIf "gitdir:~/src/clora/"]
   path = ~/src/clora/.gitconfig
-
 [includeIf "gitdir:~/src/randori/"]
   path = ~/src/randori/.gitconfig
 [filter "lfs"]
