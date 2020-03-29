@@ -24,6 +24,7 @@ call minpac#add('kshenoy/vim-signature')
 call minpac#add('majutsushi/tagbar')
 call minpac#add('mcchrish/extend-highlight.vim') " This is one I can/should write better: synIDattr(synIDtrans(hlID(...
 call minpac#add('mengelbrecht/lightline-bufferline')
+call minpac#add('neoclide/jsonc.vim')
 call minpac#add('raimon49/requirements.txt.vim')
 call minpac#add('rodjek/vim-puppet')
 call minpac#add('rust-lang/rust.vim')
