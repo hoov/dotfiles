@@ -1,7 +1,13 @@
 set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
 
+
+# Add Rust to the path first since our prompt uses it
+if test -d $HOME/.cargo/bin
+    set PATH $HOME/.cargo/bin $PATH
+end
+
 if command -sq starship
-    eval (starship init fish)
+    starship init fish | source
 else
     set __fish_git_prompt_show_informative_status 'yes'
 
@@ -12,6 +18,8 @@ else
     set __fish_git_prompt_color_branch '5FD7FF'
 
 end
+# Remove Rust from path, since we're going to add it in at a higher priority later
+set PATH (string match -v $HOME/.cargo/bin $PATH)
 
 # We'll take care of it ourselves...
 set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
@@ -20,12 +28,18 @@ set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 set PATH /usr/local/bin /usr/local/sbin $PATH
 
 # And prefer the path in .local evn more
-if test -e $HOME/.local/bin
+if test -d $HOME/.local/bin
     set PATH {$HOME}/.local/bin $PATH
 end 
-# Rust
-if test -e $HOME/.cargo/bin
+
+# Rust is most important
+if test -d $HOME/.cargo/bin
     set PATH $HOME/.cargo/bin $PATH
+end
+
+
+if test -d "/Applications/YubiKey Manager.app/Contents/MacOS"
+    set PATH "/Applications/YubiKey Manager.app/Contents/MacOS" $PATH
 end
 
 function __add_gnubin
@@ -46,12 +60,6 @@ case Darwin
         end
     end
     test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
-    if test -e /usr/local/opt/ncurses/bin
-        set PATH /usr/local/opt/ncurses/bin $PATH
-        set -gx LDFLAGS "-L/usr/local/opt/ncurses/lib"
-        set -gx CPPFLAGS "-I/usr/local/opt/ncurses/include"
-        set -gx PKG_CONFIG_PATH "/usr/local/opt/ncurses/lib/pkgconfig"
-    end
 case Linux
     set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
 end
@@ -81,25 +89,36 @@ end
 set fish_function_path $fish_function_path[1] $fisher_path/functions $fish_function_path[2..-1]
 set fish_complete_path $fish_complete_path[1] $fisher_path/completions $fish_complete_path[2..-1]
 
+# This is a workaround for a bug in base16-fish
+if not status --is-interactive
+    set -e base16_theme
+end
+
 for file in $fisher_path/conf.d/*.fish
     builtin source $file 2> /dev/null
 end
 
 if command -sq rg
-    set -U FZF_FIND_FILE_COMMAND "rg --files --no-ignore-vcs --hidden \$dir 2> /dev/null"
-    set -U FZF_DEFAULT_COMMAND  "rg --files --no-ignore-vcs --hidden"
+    set -gx FZF_FIND_FILE_COMMAND "rg --files --no-ignore-vcs --hidden \$dir 2> /dev/null"
+    set -gx FZF_DEFAULT_COMMAND  "rg --files --no-ignore-vcs --hidden"
 else
     set -e FZF_FIND_FILE_COMMAND
     set -e FZF_DEFAULT_COMMAND
 end
-set -U FZF_LEGACY_KEYBINDINGS 0
-set -U FZF_TMUX 1
-set -U FZF_ENABLE_OPEN_PREVIEW 1
+
+set -gx FZF_LEGACY_KEYBINDINGS 0
+set -gx FZF_TMUX 1
+set -gx FZF_ENABLE_OPEN_PREVIEW 1
 
 if command -sq bat
-    set -U FZF_PREVIEW_FILE_CMD fzf_preview
+    set -gx FZF_PREVIEW_FILE_CMD fzf_preview
+    set -gx FZF_PREVIEW_DIR_CMD fzf_preview
+
+    set -gx BAT_PAGER "less -FR"
+    alias man batman
 else
     set -e FZF_PREVIEW_FILE_CMD
+    set -e FZF_PREVIEW_DIR_CMD
 end
 
 if command -sq npx
@@ -108,6 +127,15 @@ end
 
 if command -sq dircolors; and not set -q LS_COLORS
     eval (dircolors -c ~/.dircolors)
+end
+
+if test -d /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/
+    builtin source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.fish.inc
+end
+
+# Completions
+if test -e /Applications/Docker.app/Contents/Resources/etc/docker.fish-completion
+    builtin source /Applications/Docker.app/Contents/Resources/etc/docker.fish-completion
 end
 
 # Aliases
@@ -120,14 +148,21 @@ end
 
 alias lla="ls -lha"
 
+alias pw="pass show -c"
+
 if command -sq nvim.appimage
     alias vim=nvim.appimage
+    set -gx EDITOR nvim.appimage
 else if command -sq nvim
     alias vim=nvim
+    set -gx EDITOR nvim
 else
     set -gx EDITOR vim
 end
-set -gx EDITOR vim
+
+if command -sq kitty
+    kitty + complete setup fish | source
+end
 
 if status --is-interactive
     base16-gruvbox-dark-medium
@@ -135,4 +170,5 @@ if status --is-interactive
     command -sq rbenv; and source (rbenv init -|psub)
     command -sq nodenv; and source (nodenv init -|psub)
     test -e {$HOME}/.asdf/asdf.fish; and source {$HOME}/.asdf/asdf.fish
+    source ~/.config/fish/gnupg.fish
 end

@@ -1,2 +1,4 @@
---theme="base16"
 --italic-text="always"
+--pager="less -FR"
+--style="numbers,changes,header"
+--theme="gruvbox"

@@ -109,7 +109,7 @@ augroup END
 augroup filetype_python
   autocmd!
   let g:python_highlight_all = 1
-  autocmd FileType python setlocal expandtab foldmethod=indent shiftwidth=4 softtabstop=4 tabstop=4
+  autocmd FileType python setlocal expandtab foldmethod=indent shiftwidth=4 softtabstop=4 tabstop=4 colorcolumn=80
 augroup END
 
 " Ruby
@@ -122,4 +122,11 @@ augroup END
 augroup filetype_terraform
   autocmd!
   autocmd FileType terraform setlocal smartindent commentstring=#%s
+augroup END
+
+" Typescript
+augroup filetype_typescript
+  autocmd!
+  autocmd FileType typescript setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=2
+  autocmd FileType typescriptreact setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=2
 augroup END

@@ -2,6 +2,8 @@
 
 sudo -v
 
+set -x
+
 brew bundle
 
 # Sprinkle these around to avoid timeouts
@@ -10,13 +12,9 @@ sudo -v
 model_xpath="/plist[@version='1.0']/array/dict/key[.='_items']/following-sibling::*[1]/dict/key[.='machine_model']/following-sibling::*[1]/text()"
 is_laptop=`/usr/sbin/system_profiler -xml SPHardwareDataType | xmlstarlet sel -q -t -v "$model_xpath" 2>/dev/null | grep "^MacBook"`
 
-# Pip is installed by virtue of homebrew by this point
-pip install --upgrade pip
-pip install --upgrade -r requirements.txt
+RCRC=rcrc rcup -d .
 
 sudo -v
-
-RCRC=rcrc rcup -d .
 
 ## Display
 
@@ -189,9 +187,12 @@ defaults write com.dteoh.SlowQuitApps invertList -bool YES
 # Slow quit on browsers and terminals
 defaults write com.dteoh.SlowQuitApps whitelist -array-add com.googlecode.iterm2
 defaults write com.dteoh.SlowQuitApps whitelist -array-add io.alacritty
+defaults write com.dteoh.SlowQuitApps whitelist -array-add net.kovidgoyal.kitty
 
 defaults write com.dteoh.SlowQuitApps whitelist -array-add com.google.Chrome
 defaults write com.dteoh.SlowQuitApps whitelist -array-add org.mozilla.firefoxdeveloperedition
+
+defaults write com.dteoh.SlowQuitApps whitelist -array-add com.tinyspeck.slackmacgap
 
 brew cu --no-brew-update -af slowquitapps
 

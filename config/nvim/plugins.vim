@@ -14,13 +14,16 @@ call minpac#add('edkolev/tmuxline.vim')
 call minpac#add('elzr/vim-json')
 call minpac#add('gisphm/vim-gitignore')
 call minpac#add('hashivim/vim-terraform')
+call minpac#add('hashivim/vim-vagrant')
 call minpac#add('HerringtonDarkholme/yats.vim')
 call minpac#add('honza/vim-snippets')
 call minpac#add('itchyny/lightline.vim')
 call minpac#add('junegunn/fzf')
 call minpac#add('junegunn/fzf.vim')
+call minpac#add('junegunn/goyo.vim')
 call minpac#add('kchmck/vim-coffee-script')
 call minpac#add('kshenoy/vim-signature')
+call minpac#add('liuchengxu/vista.vim')
 call minpac#add('majutsushi/tagbar')
 call minpac#add('mcchrish/extend-highlight.vim') " This is one I can/should write better: synIDattr(synIDtrans(hlID(...
 call minpac#add('mengelbrecht/lightline-bufferline')
@@ -42,24 +45,29 @@ call minpac#add('tpope/vim-scriptease')
 call minpac#add('tpope/vim-surround')
 call minpac#add('yggdroot/indentline')
 
+
 " Autocomplete plugins
 
 " Use tslint until eslint has all the features
 let g:coc_global_extensions = [
       \ 'coc-css',
       \ 'coc-diagnostic',
-      \ 'coc-highlight',
+      \ 'coc-eslint',
       \ 'coc-git',
+      \ 'coc-highlight',
       \ 'coc-json',
       \ 'coc-prettier',
       \ 'coc-python',
       \ 'coc-rls',
       \ 'coc-snippets',
       \ 'coc-syntax',
-      \ 'coc-tslint-plugin',
       \ 'coc-tsserver',
       \ 'coc-vimlsp'
       \ ]
+
+" When we need to debug coc
+" let $NVIM_COC_LOG_LEVEL = 'debug'
+" let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']
 
 call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
 
@@ -102,7 +110,7 @@ let g:tmuxline_preset = {
       \ 'win': [ '#I', '#W'],
       \ 'cwin': [ '#I', '#W', '#F'],
       \ 'x': [ '#{sysstat_cpu} #{cpu.color}#{cpu.pused}', '  #{cpu_fg_color}#{cpu_percentage} #{cpu_icon}' ],
-      \ 'y': [ ' ', '%a', '%b %e %I:%M %P' ],
+      \ 'y': [ ' ', '%a', '%b %e %I:%M %p' ],
       \ 'z': ['  ', '#{public_ip}', '#H']
       \ }
 let g:tmuxline_separators = {
@@ -217,6 +225,10 @@ function! CocStatus() abort
   return get(g:, 'coc_status', '')
 endfunction
 
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+
 let g:lightline = {}
 let g:lightline.colorscheme='gruvbox'
 let g:lightline.separator = { 'left': '', 'right': '' }
@@ -227,7 +239,7 @@ let g:lightline.subseparator = { 'left': ' ', 'right': ' ' }
 let g:lightline.active = {
       \ 'left': [['artify_mode', 'paste'],
       \          ['readonly', 'filename', 'modified'],
-      \          ['devicons_fileformat']],
+      \          ['devicons_fileformat', 'method']],
       \ 'right': [['lineinfo'],
       \           ['percent'],
       \           ['coc_status', 'filetype', 'error_count', 'warning_count', 'info_count', 'hint_count']]
@@ -255,7 +267,8 @@ let g:lightline.component_function = {
       \ 'artify_mode': 'Artify_lightline_mode',
       \ 'coc_git_status': 'CocGitStatus',
       \ 'devicons_fileformat': 'Devicons_Fileformat',
-      \ 'diagnostic_status': 'DiagnosticStatus'
+      \ 'diagnostic_status': 'DiagnosticStatus',
+      \ 'method': 'NearestMethodOrFunction'
       \ }
 let g:lightline.component_expand = {
       \ 'buffers': 'lightline#bufferline#buffers',
@@ -273,7 +286,10 @@ let g:lightline.component_type = {
 
 " junegunn/fzf
 
+let g:fzf_buffers_jump = 1
 let g:fzf_command_prefix = 'Fzf'
+
+nnoremap <Leader>b :FzfBuffers<CR>
 nnoremap <Leader>o :FzfGitFiles<CR>
 nnoremap <Leader>O :FzfFiles<CR>
 nnoremap <Leader>r :FzfRg<CR>
@@ -315,6 +331,19 @@ function! FloatingFZF()
   return nvim_open_win(buf, v:true, opts)
 endfunction
 
+" liuchengxu/vista.vim
+nnoremap <Leader>v :Vista!!<CR>
+let g:vista#renderer#enable_icon = 1
+let g:vista_fzf_preview = ['right:50%']
+let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
+let g:vista_sidebar_width = 50
+let g:vista_stay_on_open = 0
+
+augroup vista_custom
+  autocmd!
+  autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+augroup END
+
 " majutsushi/tagbar
 nnoremap <F8> :TagbarToggle<CR>
 
@@ -346,12 +375,12 @@ let g:DevIconsEnableFoldersOpenClose = v:true
 
 " sainnhe/artify.vim
 function! Artify_lightline_mode() abort
-    return Artify(lightline#mode(), 'monospace')
+    return lightline#mode()
 endfunction
 
 function! Artify_gitbranch() abort
   if FugitiveHead() !=# ''
-    return Artify(FugitiveHead(), 'monospace').'  '
+    return FugitiveHead().'  '
   else
     return "\ue61b "
   endif

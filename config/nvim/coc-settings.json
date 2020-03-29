@@ -1,7 +1,64 @@
 {
+  // tsserver is totally broken right now
+  "coc.preferences.extensionUpdateCheck": "never",
   "codeLens.enable": true,
   "diagnostic-languageserver.filetypes": {
-    "sh": "shellcheck"
+    "sh": "shellcheck",
+    "vim": "vint"
+  },
+  "diagnostic-languageserver.linters": {
+    "vint": {
+      "args": [
+        "--style-problem",
+        "--enable-neovim",
+        "--format",
+        "{file_path}:{line_number}:{column_number}:{severity}: {description} (see {reference})",
+        "-"
+      ],
+      "command": "vint",
+      "debounce": 100,
+      "formatLines": 1,
+      "formatPattern": [
+        "[^:]+:(\\d+):(\\d+):([^:]+):\\s*(.*$)",
+        {
+          "column": 2,
+          "line": 1,
+          "message": 4,
+          "security": 3
+        }
+      ],
+      "offsetColumn": 0,
+      "offsetLine": 0,
+      "securities": {
+        "error": "error",
+        "style_problem": "info",
+        "warning": "warning"
+      },
+      "sourceName": "vint"
+    },
+    "shellcheck": {
+      "command": "shellcheck",
+      "debounce": 100,
+      "args": [ "--format=gcc", "-x", "-"],
+      "offsetLine": 0,
+      "offsetColumn": 0,
+      "sourceName": "shellcheck",
+      "formatLines": 1,
+      "formatPattern": [
+        "^[^:]+:(\\d+):(\\d+):\\s+([^:]+):\\s+(.*)$",
+        {
+          "line": 1,
+          "column": 2,
+          "message": 4,
+          "security": 3
+        }
+      ],
+      "securities": {
+        "error": "error",
+        "warning": "warning",
+        "note": "info"
+      }
+    }
   },
   "diagnostic.checkCurrentLine": true,
   "diagnostic.displayByAle": false,
@@ -27,66 +84,24 @@
       "ignoredRootPaths": [
         "~"
       ]
-    },
-    "dls": {
-      "args": [
-        "--stdio"
-      ],
-      "command": "diagnostic-languageserver",
-      "filetypes": [
-        "vim"
-      ],
-      "initializationOptions": {
-        "filetypes": {
-          "vim": "vint"
-        },
-        "linters": {
-          "vint": {
-            "args": [
-              "--style-problem",
-              "--enable-neovim",
-              "--format",
-              "{file_path}:{line_number}:{column_number}:{severity}: {description} (see {reference})",
-              "-"
-            ],
-            "command": "vint",
-            "debounce": 100,
-            "formatLines": 1,
-            "formatPattern": [
-              "[^:]+:(\\d+):(\\d+):([^:]+):\\s*(.*$)",
-              {
-                "column": 2,
-                "line": 1,
-                "message": 4,
-                "security": 3
-              }
-            ],
-            "offsetColumn": 0,
-            "offsetLine": 0,
-            "securities": {
-              "error": "error",
-              "style_problem": "info",
-              "warning": "warning"
-            },
-            "sourceName": "vint"
-          }
-        }
-      }
     }
   },
   "python.formatting.provider": "black",
   // Microsoft's language server seems to be more responsive
   "python.jediEnabled": false,
-  "python.linting.flake8Args": [
-    "-m",
-    "flake8"
-  ],
+  //"python.linting.flake8Args": [
+  //  "-m",
+  //  "flake8"
+  //],
   "python.linting.flake8Enabled": true,
-  "python.linting.flake8Path": "~/.asdf/shims/python",
+  //"python.linting.flake8Path": "~/.asdf/shims/python",
   "python.linting.lintOnSave": true,
   "python.linting.pylintEnabled": false,
-  "python.pythonPath":"~/.asdf/shims/python",
+  //"python.pythonPath":"~/.asdf/shims/python",
   "suggest.preferCompleteThanJumpPlaceholder": true,
   "suggest.timeout": 5000,
-  "tsserver.reportStyleChecksAsWarnings": false
+  "tsserver.log": "verbose",
+  //"tsserver.npm": "/usr/local/bin/npm",
+  "tsserver.reportStyleChecksAsWarnings": false,
+  "tsserver.trace.server": "verbose"
 }
