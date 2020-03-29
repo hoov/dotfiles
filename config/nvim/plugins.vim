@@ -10,7 +10,6 @@ call minpac#add('cespare/vim-toml')
 call minpac#add('chr4/nginx.vim')
 call minpac#add('dag/vim-fish') " This is super old, but the one most commonly used
 call minpac#add('dense-analysis/ale')
-call minpac#add('edkolev/tmuxline.vim')
 call minpac#add('elzr/vim-json')
 call minpac#add('gisphm/vim-gitignore')
 call minpac#add('hashivim/vim-terraform')
@@ -45,6 +44,9 @@ call minpac#add('tpope/vim-repeat')
 call minpac#add('tpope/vim-scriptease')
 call minpac#add('tpope/vim-surround')
 call minpac#add('yggdroot/indentline')
+
+"  my forks
+call minpac#add('hoov/tmuxline.vim', {'branch': 'truecolor-lightline'})
 
 
 " Autocomplete plugins
