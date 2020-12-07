@@ -9,6 +9,13 @@ ssh_only = false
 [username]
 show_always = true
 
+# Cloud vendors
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
 # Languages
 
 [python]
@@ -20,7 +27,3 @@ symbol=" "
 
 [package]
 symbol = " "
-
-[aws]
-disabled = true
-
