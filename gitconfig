@@ -43,7 +43,6 @@
   pruneTags = true
 [merge] 
   tool = araxis
-  ff = only
 [push]
   default = current
 [rerere]
