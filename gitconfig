@@ -5,6 +5,7 @@
   incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate ..@{u}
   outgoing = !git fetch && git log --pretty=oneline --abbrev-commit --graph --decorate  @{u}..
   patch = !git --no-pager diff --no-color
+  root = rev-parse --show-toplevel
   up = pull --rebase --autostash
   vlog = log --pretty=oneline --abbrev-commit --graph --decorate
 [apply]
@@ -28,16 +29,21 @@
 [core]
   autocrlf = false
   excludesfile = ~/.gitignore
-  pager = diff-so-fancy | less --tabs=4 -RFX
+  pager = delta --dark --theme="gruvbox"
 [diff] 
   colorMoved = zebra
   mnemonicprefix = true
-  tool = kitty
+  tool = araxis
 [difftool]
   prompt = false
   trustExitCode = true
-[difftool "kitty"]
-  cmd = kitty +kitten diff $LOCAL $REMOTE
+[difftool "araxis"]
+  path = /usr/local/bin/araxiscompare
+[mergetool]
+  prompt = false
+  trustExitCode = true
+[mergetool "araxis"]
+  path = /usr/local/bin/araxiscompare
 [fetch]
   prune = true
   pruneTags = true
@@ -49,12 +55,14 @@
   enabled = 1
 [status]
   submodulesummary = 1
-
 [include]
   path = ~/.gitconfig.local
-
 [includeIf "gitdir:~/src/clora/"]
   path = ~/src/clora/.gitconfig
-
-[includeIf "gitdir:~/src/evisort/"]
-  path = ~/src/evisort/.gitconfig
+[includeIf "gitdir:~/src/randori/"]
+  path = ~/src/randori/.gitconfig
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process

@@ -1,7 +1,7 @@
 cask_args appdir: "/Applications"
 
 tap "buo/cask-upgrade"
-tap "homebrew/cask-cask"
+tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "dteoh/sqa"
@@ -18,6 +18,8 @@ cask "java"
 
 brew "asdf"
 brew "automake"
+brew "bat"
+brew "broot"
 brew "cmake"
 brew "coreutils"
 brew "diff-so-fancy"
@@ -29,7 +31,7 @@ brew "jq"
 brew "llvm"
 brew "lua@5.1"
 brew "neovim"
-brew "postgresql", args: ["with-dtrace"], restart_service: true
+brew "postgresql", restart_service: true
 brew "pstree"
 brew "rbenv"
 brew "reattach-to-user-namespace"
@@ -39,22 +41,22 @@ brew "tmux"
 brew "tree"
 brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
 brew "xmlstarlet"
-brew "yarn", args: ["without-node"]
+brew "yarn"
 
-cask "alfred"
 cask "atom"
-cask "bat"
 cask "caffeine"
 cask "chromedriver"
 cask "google-chrome"
+cask "launchbar"
 cask "kitty"
 cask "xscreensaver"
 
-cask "caskroom/versions/firefox-developer-edition"
-cask "caskroom/versions/iterm2-beta"
+cask "firefox-developer-edition"
+cask "iterm2-beta"
 
 cask "dteoh/sqa/slowquitapps"
 
+mas "Amphetamine", id: 937984704
 mas "Dashlane", id: 552383089
 mas "OmniGraffle", id: 711830901
 mas "Skitch", id: 425955336

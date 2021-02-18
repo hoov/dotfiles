@@ -6,3 +6,5 @@ URxvt*letterSpace: true
 
 URxvt*font: xft:PragmataPro Mono Liga:style=Regular:pixelsize=14:antialias=true
 URxvt*boldFont: xft:PragmataPro Mono Liga:style=Bold:pixelsize=14:antialias=true
+
+Xft.dpi: 192

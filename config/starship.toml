@@ -1,8 +1,29 @@
+[character]
+symbol = ""
+error_symbol = ""
+vicmd_symbol = ""
+
 [hostname]
 ssh_only = false
 
-[python]
-pyenv_version_name = false
-
 [username]
 show_always = true
+
+# Cloud vendors
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+# Languages
+
+[python]
+pyenv_version_name = false
+symbol = " "
+
+[nodejs]
+symbol=" "
+
+[package]
+symbol = " "
