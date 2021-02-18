@@ -121,10 +121,6 @@ else
     set -e FZF_PREVIEW_DIR_CMD
 end
 
-#if command -sq npx
-#    source (npx --shell-auto-fallback fish | psub)
-#end
-
 if command -sq dircolors; and not set -q LS_COLORS
     eval (dircolors -c ~/.dircolors)
 end
