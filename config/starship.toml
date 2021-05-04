@@ -1,5 +1,5 @@
 [character]
-symbol = ""
+success_symbol = ""
 error_symbol = ""
 vicmd_symbol = ""
 
@@ -23,7 +23,7 @@ pyenv_version_name = false
 symbol = " "
 
 [nodejs]
-symbol=" "
+symbol = " "
 
 [package]
 symbol = " "
