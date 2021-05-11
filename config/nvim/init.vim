@@ -99,6 +99,12 @@ augroup filetype_gitcommit
   autocmd FileType gitcommit setlocal spell nofoldenable
 augroup END
 
+" Golang
+augroup filetype_golang
+  autocmd!
+  autocmd FileType go setlocal shiftwidth=2 tabstop=2
+augroup END
+
 " JSON
 augroup filetype_json
   autocmd!

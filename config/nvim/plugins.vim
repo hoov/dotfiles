@@ -12,10 +12,11 @@ call minpac#add('dag/vim-fish') " This is super old, but the one most commonly u
 call minpac#add('dense-analysis/ale')
 call minpac#add('elzr/vim-json')
 call minpac#add('gisphm/vim-gitignore')
+call minpac#add('fatih/vim-go', {'do': ':GoUpdateBinaries'})
 call minpac#add('hashivim/vim-terraform')
 call minpac#add('hashivim/vim-vagrant')
 call minpac#add('HerringtonDarkholme/yats.vim')
-call minpac#add('honza/vim-snippets')
+"call minpac#add('honza/vim-snippets')
 call minpac#add('itchyny/lightline.vim')
 call minpac#add('junegunn/fzf')
 call minpac#add('junegunn/fzf.vim')
@@ -57,6 +58,7 @@ let g:coc_global_extensions = [
       \ 'coc-diagnostic',
       \ 'coc-eslint',
       \ 'coc-git',
+      \ 'coc-go',
       \ 'coc-highlight',
       \ 'coc-json',
       \ 'coc-prettier',
@@ -136,6 +138,10 @@ function! SaveTmuxline() abort
 endfunction
 
 nnoremap <silent> <leader>T :call SaveTmuxline()<CR>
+
+" fatih/vim-go
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
 
 " hashivim/vim-terraform
 let g:terraform_fmt_on_save=1
