@@ -3,7 +3,7 @@ set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
 
 # Add Rust to the path first since our prompt uses it
 if test -d $HOME/.cargo/bin
-    set PATH $HOME/.cargo/bin $PATH
+    fish_add_path $HOME/.cargo/bin
 end
 
 if command -sq starship
@@ -18,34 +18,38 @@ else
     set __fish_git_prompt_color_branch '5FD7FF'
 
 end
-# Remove Rust from path, since we're going to add it in at a higher priority later
-set PATH (string match -v $HOME/.cargo/bin $PATH)
 
 # We'll take care of it ourselves...
 set VIRTUAL_ENV_DISABLE_PROMPT 'yes'
 
 # Prefer /usr/local/bin and /usr/local/sbin
-set PATH /usr/local/bin /usr/local/sbin $PATH
+fish_add_path /usr/local/bin /usr/local/sbin
 
 # And prefer the path in .local evn more
 if test -d $HOME/.local/bin
-    set PATH {$HOME}/.local/bin $PATH
+    fish_add_path {$HOME}/.local/bin
 end 
 
-# Rust is most important
+# Move rust to the front
 if test -d $HOME/.cargo/bin
-    set PATH $HOME/.cargo/bin $PATH
+    fish_add_path -m {$HOME}/.cargo/bin
 end
 
 
 if test -d "/Applications/YubiKey Manager.app/Contents/MacOS"
-    set PATH "/Applications/YubiKey Manager.app/Contents/MacOS" $PATH
+    fish_add_path "/Applications/YubiKey Manager.app/Contents/MacOS"
 end
 
 function __add_gnubin
-    if test -e /usr/local/opt/$argv[1]/libexec/gnubin
-        set PATH /usr/local/opt/$argv[1]/libexec/gnubin $PATH
+    if test -d /usr/local/opt/$argv[1]/libexec/gnubin
+        fish_add_path /usr/local/opt/$argv[1]/libexec/gnubin
   end
+end
+
+function __add_toolchain
+    if test -d /usr/local/opt/$argv[1]/bin
+        fish_add_path /usr/local/opt/$argv[1]/bin
+    end
 end
 
 set fish_complete_path $fish_complete_path[1] {$HOME}/.asdf/completions $fish_complete_path[2..-1]
@@ -59,6 +63,10 @@ case Darwin
             __add_gnubin $pkg
         end
     end
+    for toolchain in "arm-gcc-bin@8" "avr-gcc@8"
+        __add_toolchain $toolchain
+    end
+
     test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
 case Linux
     set -x JAVA_HOME (readlink -f /usr/bin/java | sed "s:jre/bin/java::")
@@ -163,8 +171,6 @@ end
 if status --is-interactive
     base16-gruvbox-dark-medium
 
-    command -sq rbenv; and source (rbenv init -|psub)
-    command -sq nodenv; and source (nodenv init -|psub)
     test -e {$HOME}/.asdf/asdf.fish; and source {$HOME}/.asdf/asdf.fish
     source ~/.config/fish/gnupg.fish
 end
