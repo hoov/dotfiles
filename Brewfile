@@ -34,11 +34,12 @@ brew "less"
 brew "llvm"
 brew "lua@5.1"
 brew "neovim"
-brew "postgresql", restart_service: true
+brew "p7zip"
 brew "pstree"
 brew "reattach-to-user-namespace"
 brew "redis", restart_service: true
 brew "ripgrep"
+brew "timg"
 brew "tmux"
 brew "tree"
 brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]

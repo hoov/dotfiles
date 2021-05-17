@@ -114,19 +114,22 @@ else
     set -e FZF_DEFAULT_COMMAND
 end
 
-set -gx FZF_LEGACY_KEYBINDINGS 0
-set -gx FZF_TMUX 1
-set -gx FZF_ENABLE_OPEN_PREVIEW 1
-
 if command -sq bat
-    set -gx FZF_PREVIEW_FILE_CMD fzf_preview
-    set -gx FZF_PREVIEW_DIR_CMD fzf_preview
-
     set -gx BAT_PAGER "less -FR"
     alias man batman
-else
-    set -e FZF_PREVIEW_FILE_CMD
-    set -e FZF_PREVIEW_DIR_CMD
+end
+
+if command -sq fzf
+    bind --erase \cf
+    bind \ct __fzf_search_current_dir
+
+    set fzf_preview_file_cmd fzf_preview
+    if command -sq exa
+        set fzf_preview_dir_cmd exa --all --tree --level 2 --color=always
+    else
+        set -e fzf_preview_file_cmd
+        set -e fzf_preview_dir_cmd
+    end
 end
 
 if command -sq dircolors; and not set -q LS_COLORS
